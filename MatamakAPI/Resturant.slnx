@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="../Core/Core.csproj" />
-  <Project Path="../Infrastructure/Infrastructure.csproj" />
-  <Project Path="Resturant.csproj" />
-</Solution>
