@@ -2,10 +2,10 @@
 
 Matamak is a restaurant ordering system built with two main parts:
 
-- `Backend`: A .NET RESTful API responsible for business logic, authentication, database access, and payment integration.
-- `Frontend`: A client application that consumes the API and provides the user interface for customers or admins.
+- `Backend`: A .NET RESTful API responsible for business logic, authentication, database access, real-time order updates, and payment integration.
+- `Frontend`: A client application that consumes the API and provides the user interface for customers, cashiers, and admins.
 
-At the moment, this repository contains the `Backend` implementation and its supporting layers. The `Frontend` is part of the system concept and can be documented here as the client application connected to this API.
+At the moment, this repository contains the `Backend` implementation and its supporting layers. The `Frontend` is still not included in this repository.
 
 ## Table of Contents
 
@@ -30,14 +30,18 @@ At the moment, this repository contains the `Backend` implementation and its sup
 
 Matamak is designed to support restaurant operations digitally through a connected backend and frontend experience.
 
-The system can be used to:
+The system can currently be used to:
 
 - Manage menu items and food categories
 - Organize items by country or cuisine
-- Create takeaway, dine-in, and delivery orders
-- Authenticate users securely
-- Integrate online payment workflows
+- Create dine-in and delivery orders
+- Handle user registration, activation, login, refresh token, password reset, and account updates
+- Support different roles such as `Admin`, `Cashier`, and `Customer`
+- Integrate online payment workflows with Paymob
+- Provide real-time order communication using SignalR
 - Allow a frontend application to consume and display backend data
+
+The backend also contains takeaway order service and repository logic, but a dedicated takeaway controller has not been added yet.
 
 ## System Components
 
@@ -48,8 +52,10 @@ The backend is implemented as an ASP.NET Core Web API and is responsible for:
 - Business logic
 - Database operations
 - Authentication and authorization
+- User and role management
 - Order processing
 - Payment integration with Paymob
+- Real-time communication through SignalR
 - Exposing RESTful endpoints for the frontend
 
 ### Frontend
@@ -62,7 +68,7 @@ The frontend is the presentation layer of the system and is responsible for:
 - Consuming the backend API endpoints
 
 Note:
-The current repository contains the backend codebase. If you later add a frontend project, this README can be extended with its framework, setup instructions, build commands, and deployment link.
+The current repository contains the backend codebase only. If you later add a frontend project, this README can be extended with its framework, setup instructions, build commands, and deployment link.
 
 ## Features
 
@@ -73,15 +79,21 @@ The current repository contains the backend codebase. If you later add a fronten
 - JWT-based authentication setup
 - ASP.NET Core Identity integration
 - Swagger UI for API testing and documentation
+- SignalR hub for real-time order updates
 - Support for:
   - Menu items
   - Categories
   - Countries
   - Order items
-  - Takeaway orders
   - Dine-in orders
   - Delivery orders
+  - Account activation
+  - Refresh token flow
+  - Forgot/reset password flow
+  - Admin, Cashier, and Customer account management
 - Paymob payment URL generation
+- Daily order counters موجودة في الموديل وقاعدة البيانات
+- Takeaway order service/repository logic is present in the backend layer
 
 ## Technologies Used
 
@@ -95,6 +107,7 @@ The current repository contains the backend codebase. If you later add a fronten
 - ASP.NET Core Identity
 - JWT Bearer Authentication
 - Swagger / Swashbuckle
+- SignalR
 - MailKit / MimeKit
 - Paymob integration
 
@@ -118,6 +131,7 @@ It includes:
 - DTOs for requests and responses
 - Service interfaces
 - Repository interfaces
+- ModelView classes used by the application
 
 ### 2. Infrastructure
 
@@ -125,13 +139,14 @@ The `Infrastructure` layer contains implementation details.
 
 It includes:
 
-- `DataContext` for Entity Framework Core
+- `DataContext` for Entity Framework Core and Identity
 - Repository implementations
 - Service implementations
 - EF Core migrations
 - Identity user model
 - Paymob payment integration
 - Email sending functionality
+- SignalR `OrderHub`
 
 ### 3. API
 
@@ -144,6 +159,7 @@ It is responsible for:
 - Database registration
 - Swagger setup
 - CORS setup
+- SignalR mapping
 - Routing and application startup
 
 ### Frontend Relationship
@@ -162,7 +178,7 @@ cd Matamak
 ### 2. Restore Dependencies
 
 ```bash
-dotnet restore API/Resturant.csproj
+dotnet restore Resturant/Resturant.csproj
 ```
 
 ### 3. Install EF Core CLI Tools
@@ -176,7 +192,7 @@ dotnet tool install --global dotnet-ef
 ### 4. Prepare the Database
 
 ```bash
-dotnet ef database update --project Infrastructure --startup-project API
+dotnet ef database update --project Infrastructure --startup-project Resturant
 ```
 
 ### Frontend Installation
@@ -217,7 +233,7 @@ If a frontend is added, it will typically require:
 
 ## Configuration
 
-Update `API/appsettings.json` before running the backend.
+Update `Resturant/appsettings.json` before running the backend.
 
 ### Database Connection
 
@@ -247,6 +263,14 @@ Update `API/appsettings.json` before running the backend.
 }
 ```
 
+### SignalR Hub
+
+The order hub is mapped at:
+
+```text
+/orderHub
+```
+
 ### Frontend Configuration
 
 When the frontend is added, configure its API base URL to point to the backend, for example:
@@ -260,7 +284,7 @@ http://localhost:5270
 ### Run the Backend Locally
 
 ```bash
-dotnet run --project API
+dotnet run --project Resturant
 ```
 
 Default local backend URL:
@@ -278,13 +302,13 @@ http://localhost:5270/
 ### Build the Backend
 
 ```bash
-dotnet build API/Resturant.csproj -c Release
+dotnet build Resturant/Resturant.csproj -c Release
 ```
 
 ### Publish the Backend
 
 ```bash
-dotnet publish API/Resturant.csproj -c Release -o publish
+dotnet publish Resturant/Resturant.csproj -c Release -o publish
 ```
 
 Expected output:
@@ -305,61 +329,101 @@ Frontend Production URL: https://your-frontend-domain.com/
 
 ## API Endpoints
 
-The current repository contains DTOs, services, models, and backend configuration that represent the following API areas. The routes below are suitable RESTful endpoint definitions for the frontend to consume.
+The current repository contains working controllers for the following API areas.
 
-### Authentication
+### Authentication / Accounts
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/auth/register` | Register a new user |
-| `POST` | `/api/auth/login` | Authenticate and return JWT |
-| `POST` | `/api/auth/refresh-token` | Refresh an expired token |
-| `POST` | `/api/auth/send-activation-code` | Send account activation code |
+| `POST` | `/api/Account/Customerregister` | Register a new customer |
+| `POST` | `/api/Account/manger&cashierRegister` | Create manager or cashier account by admin |
+| `POST` | `/api/Account/activeAccount/{email}` | Activate account using verification code |
+| `POST` | `/api/Account/login` | Authenticate and return token data |
+| `POST` | `/api/Account/refreshToken` | Refresh an expired token |
+| `PUT` | `/api/Account/EditAccount/{username}` | Edit account data |
+| `PUT` | `/api/Account/ChangePassword/{username}` | Change account password |
+| `DELETE` | `/api/Account/DeleteMyAccount/{username}` | Delete current account |
+| `DELETE` | `/api/Account/DeleteAnyAccount/{username}` | Delete any account by admin |
+| `POST` | `/api/Account/ForgotPassword` | Send forgot-password code |
+| `POST` | `/api/Account/VerifyForgetPasswordCode/{email}` | Verify forgot-password code |
+| `PUT` | `/api/Account/ResetPassword/{email}` | Reset password |
+| `GET` | `/api/Account/GetAllAdmins` | Get all admins |
+| `GET` | `/api/Account/GetAdminByUsername/{username}` | Get admin by username |
+| `GET` | `/api/Account/GetAllCashiers` | Get all cashiers |
+| `GET` | `/api/Account/GetCashierByUsername/{username}` | Get cashier by username |
+| `GET` | `/api/Account/GetAllCustomers` | Get all customers |
+| `GET` | `/api/Account/GetCustomerByUsername/{username}` | Get customer by username |
 
 ### Items
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/items` | Get all items |
-| `GET` | `/api/items/{id}` | Get item by ID |
-| `POST` | `/api/items` | Create a new item |
-| `PUT` | `/api/items/{id}` | Update an existing item |
-| `GET` | `/api/items/category/{categoryId}` | Get items by category |
-| `GET` | `/api/items/country/{countryId}` | Get items by country |
-| `GET` | `/api/items/filter?countryId=1&categoryId=2` | Filter items by country and category |
+| `GET` | `/api/Item/getAllItem` | Get all items |
+| `GET` | `/api/Item/getItemById/{id}` | Get item by ID |
+| `GET` | `/api/Item/sortItems?countryId=1&categoryId=2` | Filter items by country and category |
+| `POST` | `/api/Item/addItem` | Create a new item |
+| `PUT` | `/api/Item/updateItem/{id}` | Update an existing item |
+| `DELETE` | `/api/Item/removeItem` | Remove an item |
+
+### Categories
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/Category/getCategoryById` | Get category by ID |
+| `GET` | `/api/Category/getAllCategories` | Get all categories |
+| `POST` | `/api/Category/addCategory` | Add a category |
+| `DELETE` | `/api/Category/removeCategory` | Remove a category |
+| `PUT` | `/api/Category/editCategory` | Edit a category |
+
+### Countries
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/Country/addCountry` | Add a country |
+| `PUT` | `/api/Country/editCountry` | Edit a country |
+| `DELETE` | `/api/Country/removeCountry` | Remove a country |
+| `GET` | `/api/Country/getCountryById` | Get country by ID |
+| `GET` | `/api/Country/getAllCountries` | Get all countries |
 
 ### Delivery Orders
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/delivery-orders` | Get all delivery orders |
-| `GET` | `/api/delivery-orders/{orderNumber}` | Get delivery order details |
-| `POST` | `/api/delivery-orders` | Create a delivery order |
-| `PUT` | `/api/delivery-orders/{orderNumber}` | Update a delivery order |
+| `GET` | `/api/DeliveryOrder/getDeliveryOrders` | Get all delivery orders |
+| `GET` | `/api/DeliveryOrder/getDeliveryOrderById/{id}` | Get delivery order details |
+| `POST` | `/api/DeliveryOrder/addDelveryOrder` | Create a delivery order |
+| `PUT` | `/api/DeliveryOrder/updateDeliveryOrder/{id}` | Update a delivery order |
+| `PUT` | `/api/DeliveryOrder/cancelDeliveryOrder/{id}` | Cancel a delivery order |
+| `PUT` | `/api/DeliveryOrder/handOrderToDriver/{id}` | Mark order as handed to driver |
+| `PUT` | `/api/DeliveryOrder/handOrderToCustomer/{id}` | Mark order as handed to customer |
+| `DELETE` | `/api/DeliveryOrder/removeDeliveryOrder/{id}` | Remove a delivery order |
 
 ### Dine-In Orders
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/dinein-orders` | Get all dine-in orders |
-| `GET` | `/api/dinein-orders/{orderNumber}` | Get dine-in order details |
-| `POST` | `/api/dinein-orders` | Create a dine-in order |
-| `PUT` | `/api/dinein-orders/{orderNumber}` | Update a dine-in order |
-
-### Takeaway Orders
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/takeaway-orders` | Get all takeaway orders |
-| `GET` | `/api/takeaway-orders/{orderNumber}` | Get takeaway order details |
-| `POST` | `/api/takeaway-orders` | Create a takeaway order |
-| `PUT` | `/api/takeaway-orders/{orderNumber}` | Update a takeaway order |
+| `GET` | `/api/DineinOrder/getAllDineinOrders` | Get all dine-in orders |
+| `GET` | `/api/DineinOrder/getDineinOrder/{id}` | Get dine-in order details |
+| `POST` | `/api/DineinOrder/addDineinOrder` | Create a dine-in order |
+| `PUT` | `/api/DineinOrder/updateDineinOrder/{id}` | Update a dine-in order |
+| `PUT` | `/api/DineinOrder/ChangeDineinOrderStatus/{id}` | Change dine-in order status |
+| `DELETE` | `/api/DineinOrder/removeDineinOrder/{id}` | Remove a dine-in order |
 
 ### Payments
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/payments/paymob` | Generate a Paymob payment URL |
+| `POST` | `/api/Payment/pay/{orderId}` | Generate a Paymob payment URL |
+
+### Real-Time
+
+| Type | Endpoint | Description |
+|---|---|---|
+| `SignalR Hub` | `/orderHub` | Real-time communication for order updates |
+
+### Takeaway Orders
+
+Takeaway order contracts and service/repository code exist in the backend layers, but there is currently no exposed controller endpoint in the `Resturant` API project.
 
 ## API Documentation
 
@@ -414,57 +478,27 @@ This documentation is useful for frontend developers to test requests and unders
 
 ```json
 {
-  "orderNumber": 501,
-  "orderDate": "2026-04-25T18:30:00",
-  "totalPrice": 220.00,
-  "deliveryAddress": "12 Tahrir Street, Cairo",
-  "contactNumber": "01000000000",
-  "customerName": "Ahmed Ali",
+  "address": "12 Tahrir Street, Cairo",
+  "phoneNumber": "01000000000",
+  "note": "Extra garlic",
   "items": [
     {
-      "name": "Chicken Shawarma",
-      "priceForOne": 95.00,
-      "quantity": 2,
-      "note": "Extra garlic",
-      "totalPrice": 190.00
+      "itemId": 1,
+      "quantity": 2
     },
     {
-      "name": "Cola",
-      "priceForOne": 30.00,
-      "quantity": 1,
-      "note": null,
-      "totalPrice": 30.00
+      "itemId": 4,
+      "quantity": 1
     }
   ]
 }
 ```
 
-### Delivery Order Response
+### Payment Response
 
 ```json
 {
-  "orderNumber": 501,
-  "orderDate": "2026-04-25T18:30:00",
-  "totalPrice": 220.00,
-  "deliveryAddress": "12 Tahrir Street, Cairo",
-  "contactNumber": "01000000000",
-  "customerName": "Ahmed Ali",
-  "items": [
-    {
-      "name": "Chicken Shawarma",
-      "priceForOne": 95.00,
-      "quantity": 2,
-      "note": "Extra garlic",
-      "totalPrice": 190.00
-    },
-    {
-      "name": "Cola",
-      "priceForOne": 30.00,
-      "quantity": 1,
-      "note": null,
-      "totalPrice": 30.00
-    }
-  ]
+  "paymentUrl": "https://accept.paymob.com/..."
 }
 ```
 
@@ -475,7 +509,7 @@ This documentation is useful for frontend developers to test requests and unders
 This backend can be published using:
 
 ```bash
-dotnet publish API/Resturant.csproj -c Release -o publish
+dotnet publish Resturant/Resturant.csproj -c Release -o publish
 ```
 
 Expected published output:
@@ -514,16 +548,12 @@ Frontend Production URL: https://your-frontend-domain.com/
 
 ```text
 Matamak/
-|-- API/
-|   |-- Program.cs
-|   |-- appsettings.json
-|   |-- appsettings.Development.json
-|   `-- Resturant.csproj
 |-- Core/
 |   |-- DTO/
 |   |-- IReprosatory/
 |   |-- IServices/
 |   |-- Models/
+|   |-- ModelView/
 |   `-- Core.csproj
 |-- Infrastructure/
 |   |-- Context/
@@ -531,21 +561,30 @@ Matamak/
 |   |-- Reprosatory/
 |   |-- Services/
 |   `-- Infrastructure.csproj
-`-- README.md
+`-- Resturant/
+    |-- Controllers/
+    |-- Properties/
+    |-- Program.cs
+    |-- appsettings.json
+    |-- appsettings.Development.json
+    |-- Resturant.csproj
+    |-- Resturant.http
+    |-- Resturant.slnx
+    `-- README.md
 ```
 
 ## Future Improvements
 
 - Add the frontend source code to the repository
+- Add a dedicated `TakeAwayOrderController`
 - Connect the frontend to all backend endpoints
-- Add controller classes for all backend services if not already included in another branch
-- Add full CRUD support for categories and countries
 - Add validation and centralized error handling
 - Add unit tests and integration tests
-- Add role-based authorization
+- Add role-based authorization refinements
 - Move secrets to environment variables or user secrets
 - Add Docker support and CI/CD pipelines
 - Fix naming inconsistencies such as `Delivary`, `Oredr`, and `Reprosatory`
+- Complete payment flow using real order data instead of temporary values
 
 ## Author
 
