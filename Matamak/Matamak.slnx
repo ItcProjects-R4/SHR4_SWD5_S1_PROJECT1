@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="../Matamak.Application/Matamak.Application.csproj" Id="9458c772-4a02-459a-a525-413535c23f3c" />
-  <Project Path="../Matamak.Infrastructure/Matamak.Infrastructure.csproj" Id="be900582-293a-414a-80f2-8b24cd30e81b" />
-  <Project Path="Matamak.API.csproj" />
-</Solution>
