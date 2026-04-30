@@ -10,7 +10,8 @@ namespace Core.IReprosatory
         public void AddDineinOrder(DineinD order);
         public void RemoveDineinOrder(int orderNumber);
         public void UpdateDineinOrder(DineinD order, int orderNumber);
-        public DineinD GetDineinOrder(int orderNumber);
-        public List<DineinD> GetAllDineinOrders();
+        public DineInOrderMV GetDineinOrder(int orderNumber);
+        public List<DineInOrderMV> GetAllDineinOrders();
+        public void ChangeDineinOrderStatus(int orderNumber, string status);
     }
 }

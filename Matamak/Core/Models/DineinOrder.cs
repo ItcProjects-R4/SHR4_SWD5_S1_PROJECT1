@@ -6,9 +6,10 @@ namespace Core.Models
 {
     public class DineinOrder: Order
     {
-        public decimal TableNumber { get; set; }
-        public decimal ServiceCharge { get; set; } = 20;
+       
+        public int TableNumber { get; set; }
+        public decimal ServiceCharge {  get; set; }= 20;
 
-           
+
     }
 }

@@ -26,14 +26,15 @@ namespace Infrastructure.Reprosatory
             dataContext.SaveChanges();
         }
 
-        List<CategoryD> ICatrgoryRepo.GetAllCategories()
+        List<CatrgoryMV> ICatrgoryRepo.GetAllCategories()
         {
            var categories = dataContext.Categories;
-            List<CategoryD> categoryDTOs = new List<CategoryD>();
+            List<CatrgoryMV> categoryDTOs = new List<CatrgoryMV>();
             foreach (var category in categories)
             {
-                CategoryD categoryDTO = new CategoryD
+                CatrgoryMV categoryDTO = new CatrgoryMV
                 {
+                    Id = category.Id,           
                     Name = category.Name
                 };
                 categoryDTOs.Add(categoryDTO);
@@ -41,15 +42,16 @@ namespace Infrastructure.Reprosatory
             return categoryDTOs;
         }
 
-        CategoryD ICatrgoryRepo.GetCategory(int id)
+        CatrgoryMV ICatrgoryRepo.GetCategory(int id)
         {
             var category = dataContext.Categories.Find(id);
             if (category == null)
             {
-                return null;
+                throw new Exception("Category not found");
             }
-            var categoryDTO = new CategoryD
+            var categoryDTO = new CatrgoryMV
             {
+                Id = category.Id,
                 Name = category.Name
             };
             return categoryDTO;
@@ -57,12 +59,18 @@ namespace Infrastructure.Reprosatory
 
         void ICatrgoryRepo.RemoveCategory(int id)
         {
-            var category = dataContext.Categories.Find(id);
-            if (category != null)
+            var items = dataContext.Items.Where(i => i.CatogryId == id).ToList();
+            if (items.Count > 0)
             {
-                dataContext.Categories.Remove(category);
-                dataContext.SaveChanges();
+                throw new Exception("Cannot delete category because it has associated items , Delete the items first.");
             }
+            var category = dataContext.Categories.Find(id);
+            if (category == null)
+            {
+                throw new Exception("Category not found");
+            }
+                dataContext.Categories.Remove(category);
+            dataContext.SaveChanges();
 
         }
 

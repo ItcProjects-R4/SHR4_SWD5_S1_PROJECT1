@@ -1,17 +1,22 @@
 ﻿using Core.Models;
+using Core.ModelView;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Core.DTO
 {
     public class DineinD
     {
-        public int orderNumber { get; set; }
-        public DateTime OrderDate { get; set; }
-        public List<OrderItemsD> Items { get; set; }
+        [Required]
+        public List<OrderItemsD> Items { get; set; }= new List<OrderItemsD>();
+        [Required]
+        [DataType(DataType.Currency)]
         public decimal TotalPrice { get; set; }
-        public decimal TableNumber { get; set; }
-        public decimal ServiceCharge { get; set; }
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Table number must be greater than 0")]
+        public int TableNumber { get; set; }
+        public decimal ServiceCharge => 20;
     }
 }

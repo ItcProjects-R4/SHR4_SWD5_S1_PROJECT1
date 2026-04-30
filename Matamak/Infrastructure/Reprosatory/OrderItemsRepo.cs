@@ -1,6 +1,7 @@
 ﻿using Core.DTO;
 using Core.IReprosatory;
 using Core.IServices;
+using Core.ModelView;
 using Infrastructure.Context;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,13 @@ namespace Infrastructure.Reprosatory
             this.dataContext = dataContext;
             this.orderItemsService = orderItemsService;
         }
-        public OrderItemsD GetOrderItem(int orderItemId)
+        public OrderItemsMV GetOrderItem(int orderItemId)
         {
            var orderItem = dataContext.OrderItems.Find(orderItemId);
+            if (orderItem == null)
+            {
+                throw new Exception("orderItem not Found");
+            }
             var result = orderItemsService.GetOrderItem(orderItem);
             return result;
         }
@@ -30,6 +35,11 @@ namespace Infrastructure.Reprosatory
            var orderItemToAdd = orderItemsService.AddOrderItem(orderItem);
             dataContext.OrderItems.Add(orderItemToAdd);
             dataContext.SaveChanges();
+        }
+
+        OrderItemsD IOrderItemsRepo.GetOrderItem(int orderItemId)
+        {
+            throw new NotImplementedException();
         }
 
         void IOrderItemsRepo.RemoveOrderItem(int orderItemId)

@@ -1,5 +1,6 @@
 ﻿using Core.DTO;
 using Core.Models;
+using Core.ModelView;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,8 @@ namespace Core.IServices
     {
         public OrderItems AddOrderItem(OrderItemsD orderItem);
         public OrderItems UpdateOrderItem(OrderItemsD orderItem, int orderItemId);
-        public OrderItemsD GetOrderItem(OrderItems orderItem);
+        public OrderItemsMV GetOrderItem(OrderItems orderItem);
+        public void DeleteOrderItem(OrderItems orderItem);
 
     }
 }

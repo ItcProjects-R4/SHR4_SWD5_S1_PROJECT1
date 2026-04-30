@@ -9,11 +9,10 @@ namespace Core.IReprosatory
     {
         public void AddCategory(CategoryD caegory);
         public void RemoveCategory(int id);
-        public CategoryD GetCategory(int id);
+        public CatrgoryMV GetCategory(int id);
 
         public void UpdateCategory(CategoryD caegory, int id);
 
-        public List<CategoryD> GetAllCategories();
-
+        public List<CatrgoryMV> GetAllCategories();
     }
 }

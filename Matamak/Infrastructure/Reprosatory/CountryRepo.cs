@@ -25,14 +25,15 @@ namespace Infrastructure.Reprosatory
 
         }
 
-        List<CountryD> IcountryRepo.GetAllCountries()
+        List<CounteryMV> IcountryRepo.GetAllCountries()
         {
             var countries = dataContext.Countries.ToList();
-            var countryDList = new List<CountryD>();
+            var countryDList = new List<CounteryMV>();
             foreach (var country in countries)
             {
-                var countryD = new CountryD
+                var countryD = new CounteryMV
                 {
+                    Id = country.id,
                     Name = country.Name
                 };
                 countryDList.Add(countryD);
@@ -41,11 +42,16 @@ namespace Infrastructure.Reprosatory
 
         }
 
-        CountryD IcountryRepo.GetCountryById(int id)
+        CounteryMV IcountryRepo.GetCountryById(int id)
         {
             var country = dataContext.Countries.FirstOrDefault(c => c.id == id);
-            var countryD = new CountryD
+            if (country == null)
             {
+                throw new Exception("Country not found");
+            }
+            var countryD = new CounteryMV
+            {
+                Id = country.id,
                 Name = country.Name
             };
 
@@ -54,7 +60,16 @@ namespace Infrastructure.Reprosatory
 
         void IcountryRepo.RemoveCountry(int id)
         {
+            var Items = dataContext.Items.Where(i => i.CountryId == id).ToList();
+            if (Items.Count > 0)
+            {
+                throw new Exception("Cannot delete country because it has related items , Delete the items first.");
+            }
             var country = dataContext.Countries.FirstOrDefault(c => c.id == id);
+            if (country == null)
+            {
+                throw new Exception("Country not found");
+            }
             if (country != null)
             {
                 dataContext.Countries.Remove(country);

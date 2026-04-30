@@ -1,12 +1,10 @@
-﻿using Core.IServices;
-using Infrastructure.Context;
-using Infrastructure.DTO;
+﻿
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Client;
+
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -27,6 +25,13 @@ namespace Infrastructure.Services
             this.configuration = configuration;
         }
 
+        public int GenerateActiveCode()
+        {
+            Random random = new Random();
+            int activeCode = random.Next(100000, 999999);
+            return activeCode;
+        }
+
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -42,7 +47,7 @@ namespace Infrastructure.Services
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(configuration["Jwt:Key"])
+                    Encoding.UTF8.GetBytes(configuration["Jwt:Key"]??string.Empty)
                 ),
                 ValidateLifetime = false
             };
@@ -60,6 +65,10 @@ namespace Infrastructure.Services
 
         void IAccountServices.sendActiveCode(string email, int code)
         {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new Exception("Email cannot be null or empty.");
+            }
             var masge = new MimeKit.MimeMessage();
             masge.From.Add(new MimeKit.MailboxAddress("Admin", "moazkrkor@gmail.com"));
             masge.To.Add(new MimeKit.MailboxAddress("User", email));
