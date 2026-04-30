@@ -11,7 +11,7 @@ namespace Core.IReprosatory
         public void AddCountry(CountryD country);
             public void RemoveCountry(int id);
             public void UpdateCountry(CountryD country, int id);
-            public CountryD GetCountryById(int id);
-            public List<CountryD> GetAllCountries();
+            public CounteryMV GetCountryById(int id);
+            public List<CounteryMV> GetAllCountries();
     }
 }

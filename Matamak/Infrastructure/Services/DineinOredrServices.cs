@@ -1,10 +1,6 @@
-﻿using Core.DTO;
-using Core.IServices;
-using Core.Models;
-using Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+
+using System.Net.NetworkInformation;
 
 namespace Infrastructure.Services
 {
@@ -12,53 +8,68 @@ namespace Infrastructure.Services
     {
         private readonly DataContext dataContext;
         private readonly IOrderItemsService orderItemsService;
+        private readonly IDailyCounter dailyCounter;
 
-        public DineinOredrServices(DataContext dataContext, IOrderItemsService orderItemsService)
+        public DineinOredrServices(DataContext dataContext, IOrderItemsService orderItemsService,IDailyCounter dailyCounter)
         {
             this.dataContext = dataContext;
             this.orderItemsService = orderItemsService;
+            this.dailyCounter = dailyCounter;
         }
         DineinOrder IDieninOrderService.AddDineinOrder(DineinD order)
         {
             var dineinOrder = new DineinOrder
             {
-                orderNumber = order.orderNumber,
-                OrderDate = order.OrderDate,
-                TotalPrice = order.TotalPrice,
-                TableNumber = order.TableNumber,
-                ServiceCharge = order.ServiceCharge
+                Items = new List<OrderItems>()
             };
+            dineinOrder.orderNumber = dailyCounter.DineinCount();
+            dineinOrder.OrderDate = DateTime.Now;
+            dineinOrder.TotalPrice = order.TotalPrice;
+            dineinOrder.TableNumber = order.TableNumber;
+            dineinOrder.Status = "Pending";
+            foreach (var item in order.Items)
+            {
+                dineinOrder.Items.Add(orderItemsService.AddOrderItem(item));
+            }
             return dineinOrder;
         }
 
-        List<DineinD> IDieninOrderService.GetAllDineinOrders()
+        List<DineInOrderMV> IDieninOrderService.GetAllDineinOrders()
         {
-            var dineinOrders = new List<DineinD>();
+            var dineinOrders = new List<DineInOrderMV>();
             var dineinOrderList = dataContext.DineinOrders.ToList();
+            
             foreach (var order in dineinOrderList)
             {
-                var dineinD = new DineinD
+                var dineinD = new DineInOrderMV
                 {
+                    Id = order.Id,
                     orderNumber = order.orderNumber,
                     OrderDate = order.OrderDate,
                     TotalPrice = order.TotalPrice,
                     TableNumber = order.TableNumber,
-                    ServiceCharge = order.ServiceCharge
+                  
                 };
                 dineinOrders.Add(dineinD);
             }
             return dineinOrders;
         }
-        DineinD IDieninOrderService.GetDineinOrder(int orderNumber)
+        DineInOrderMV IDieninOrderService.GetDineinOrder(int orderNumber)
         {
-            var order = dataContext.DineinOrders.FirstOrDefault(o => o.orderNumber == orderNumber);
-            var dineinD = new DineinD
+            var order = dataContext.DineinOrders.Include(o => o.Items).FirstOrDefault(o => o.Id == orderNumber);
+            if (order == null)
             {
+                throw new Exception("Order not found");
+            }
+            var dineinD = new DineInOrderMV
+            {
+                Id = order.Id,
+                status = order.Status,
                 orderNumber = order.orderNumber,
                 OrderDate = order.OrderDate,
                 TotalPrice = order.TotalPrice,
                 TableNumber = order.TableNumber,
-                ServiceCharge = order.ServiceCharge
+              
             };
             foreach (var item in order.Items)
             {
@@ -69,12 +80,22 @@ namespace Infrastructure.Services
 
         DineinOrder IDieninOrderService.UpdateDineinOrder(DineinD order, int orderNumber)
         {
-            var dineinOrder = dataContext.DineinOrders.FirstOrDefault(o => o.orderNumber == orderNumber);
-            dineinOrder.OrderDate = order.OrderDate;
+            
+            var dineinOrder = dataContext.DineinOrders.Include(o => o.Items).FirstOrDefault(o => o.orderNumber == orderNumber);
+            if (dineinOrder == null)
+            {
+                throw new Exception("Order not found");
 
-            dineinOrder.TotalPrice = order.TotalPrice;
-            dineinOrder.TableNumber = order.TableNumber;
-            dineinOrder.ServiceCharge = order.ServiceCharge;
+            }
+                
+                dineinOrder.TotalPrice = order.TotalPrice;
+                dineinOrder.TableNumber = order.TableNumber;
+                dineinOrder.Items = new List<OrderItems>();
+            foreach (var item in order.Items)
+            {
+                dineinOrder.Items.Add(orderItemsService.AddOrderItem(item));
+            }
+
             return dineinOrder;
         }
     }

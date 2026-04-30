@@ -1,10 +1,6 @@
-﻿using Core.DTO;
-using Core.IServices;
-using Core.Models;
-using Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+
+using Core.ModelView;
 
 namespace Infrastructure.Services
 {
@@ -16,17 +12,25 @@ namespace Infrastructure.Services
         {
             this.dataContext = dataContext;
         }
-        public OrderItemsD GetOrderItem(OrderItems orderItem)
+
+        public void DeleteOrderItem(OrderItems orderItem)
         {
-            var orderItemDto = new OrderItemsD();
+            dataContext.OrderItems.Remove(orderItem);
+                dataContext.SaveChanges();
+        }
+
+        public OrderItemsMV GetOrderItem(OrderItems orderItem)
+        {
+            var orderItemDto = new OrderItemsMV();
            
             if (orderItem != null)
             {
-                orderItem.Name = orderItem.Name;
-                orderItem.PriceForOne = orderItem.PriceForOne;
-                orderItem.Quantity = orderItem.Quantity;
-                orderItem.Note = orderItem.Note;
-                orderItem.TotalPrice = orderItem.TotalPrice;
+                orderItemDto.Id = orderItem.Id;
+                orderItemDto.Name = orderItem.Name;
+                orderItemDto.PriceForOne = orderItem.PriceForOne;
+                orderItemDto.Quantity = orderItem.Quantity;
+                orderItemDto.Note = orderItem.Note;
+                orderItemDto.TotalPrice = orderItem.TotalPrice;
             }
             return orderItemDto;
         }

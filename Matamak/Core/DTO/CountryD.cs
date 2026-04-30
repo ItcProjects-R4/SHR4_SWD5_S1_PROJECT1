@@ -8,7 +8,7 @@ namespace Core.DTO
     public class CountryD
     {
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; }=string.Empty;
         
     }
 }

@@ -9,8 +9,9 @@ namespace Core.DTO
 {
     public class OrderItemsD
     {
+
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; }=string.Empty;
         [Required]
         public decimal PriceForOne { get; set; }
         [Required]

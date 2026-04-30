@@ -1,6 +1,4 @@
-﻿using Core.IServices;
-using Core.Models;
-using Microsoft.Extensions.Options;
+﻿
 using System.Net.Http.Json;
 using System.Text.Json;
 

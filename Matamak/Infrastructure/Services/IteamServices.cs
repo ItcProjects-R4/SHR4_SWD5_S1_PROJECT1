@@ -1,10 +1,4 @@
-﻿using Core.DTO;
-using Core.IServices;
-using Core.Models;
-using Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
 namespace Infrastructure.Services
 {
@@ -31,29 +25,11 @@ namespace Infrastructure.Services
 
         }
 
-        public List<ItemD> GetItensByCountryAndCategory(int? countryId, int? categoryId)
-        {
-            var items = new List<ItemD>();
-            var item1 = dataContext.Items.Where(i => i.CountryId == countryId && i.CatogryId == categoryId).FirstOrDefault();
-            foreach (var item in items)
-            {
-                items.Add(new ItemD
-                {
-                    Name = item.Name,
-                    Description = item.Description,
-                    Price = item.Price,
-                    ImageUrl = item.ImageUrl,
-                    CatogryId = item.CatogryId,
-                    CountryId = item.CountryId,
-                    IsAvailable = item.IsAvailable
-                });
-            }
-            return items;
-        }
 
         public Item UpdateItem(ItemD item, int id)
         {
             var item1 = dataContext.Items.Find(id);
+            
             if (item1 != null)
             {
                 item1.Name = item.Name;
@@ -67,18 +43,23 @@ namespace Infrastructure.Services
             }
             else
             {
-                return null;
+                throw new Exception("Item not found for update.");
             }
         }
 
-        List<ItemD> IItemService.GetAllItems()
+        List<ItemsModelView> IItemService.GetAllItems()
         {
-            var items = new List<ItemD>();
+            var items = new List<ItemsModelView >();
             var item1 = dataContext.Items.ToList();
+            if (item1 == null || item1.Count == 0)
+            {
+                throw new Exception("No items found.");
+            }
             foreach (var item in item1)
             {
-                items.Add(new ItemD
+                items.Add(new ItemsModelView
                 {
+                    Id = item.Id,
                     Name = item.Name,
                     Description = item.Description,
                     Price = item.Price,
@@ -91,13 +72,14 @@ namespace Infrastructure.Services
             return items;
         }
 
-        ItemD IItemService.GetItem(int id)
+        ItemsModelView IItemService.GetItem(int id)
         {
             var item = dataContext.Items.Find(id);
             if (item != null)
             {
-                return new ItemD
+                return new ItemsModelView
                 {
+                    Id = item.Id,
                     Name = item.Name,
                     Description = item.Description,
                     Price = item.Price,
@@ -107,17 +89,22 @@ namespace Infrastructure.Services
                     IsAvailable = item.IsAvailable
                 };
             }
-            return null;
+            throw new Exception($"Item with ID {id} not found.");
         }
 
-        List<ItemD> IItemService.GetItemsByCategory(int categoryId)
+        List<ItemsModelView> IItemService.GetItemsByCategory(int categoryId)
         {
-            var items = new List<ItemD>();
+            var items = new List<ItemsModelView>();
             var item = dataContext.Items.Where(i => i.CatogryId == categoryId).ToList();
+            if (item == null || item.Count == 0)
+            {
+                throw new Exception("No items found for the specified category.");
+            }
             foreach (var i in item)
             {
-                items.Add(new ItemD
+                items.Add(new ItemsModelView
                 {
+                    Id = i.Id,
                     Name = i.Name,
                     Description = i.Description,
                     Price = i.Price,
@@ -130,14 +117,44 @@ namespace Infrastructure.Services
             return items;
         }
 
-        List<ItemD> IItemService.GetItemsByCountry(int countryId)
+        List<ItemsModelView> IItemService.GetItemsByCountry(int countryId)
         {
-            var items = new List<ItemD>();
+            var items = new List<ItemsModelView>();
             var item = dataContext.Items.Where(i => i.CountryId == countryId).ToList();
+            if (item == null || item.Count == 0)
+            {
+                throw new Exception("No items found for the specified country.");
+            }
             foreach (var i in item)
             {
-                items.Add(new ItemD
+                items.Add(new ItemsModelView
                 {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Description = i.Description,
+                    Price = i.Price,
+                    ImageUrl = i.ImageUrl,
+                    CatogryId = i.CatogryId,
+                    CountryId = i.CountryId,
+                    IsAvailable = i.IsAvailable
+                });
+            }
+            return items;
+        }
+
+        List<ItemsModelView> IItemService.GetItensByCountryAndCategory(int? countryId, int? categoryId)
+        {
+            var items = new List<ItemsModelView>();
+            var item = dataContext.Items.Where(i => i.CountryId == countryId && i.CatogryId == categoryId).ToList();
+            if (item == null || item.Count == 0)
+            {
+                throw new Exception("No items found for the specified country and category.");
+            }
+            foreach (var i in item)
+            {
+                items.Add(new ItemsModelView
+                {
+                    Id = i.Id,
                     Name = i.Name,
                     Description = i.Description,
                     Price = i.Price,

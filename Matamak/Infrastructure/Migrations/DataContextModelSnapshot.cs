@@ -113,6 +113,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -162,6 +166,44 @@ namespace Infrastructure.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("Core.Models._DailyDeliverCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Delivery")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("lastDeliverDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailyDeliveryCounter");
+                });
+
+            modelBuilder.Entity("Core.Models._DailyDineinCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Dinein")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("lastDineinDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailyDineinCounter");
+                });
+
             modelBuilder.Entity("Infrastructure.Context.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -177,8 +219,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("CanResetPassword")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("CodeExpiratioTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CodeForgetPassword")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -190,6 +238,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ForgetPasswordCodeExpirationTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -395,6 +446,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CustomerUsername")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DeliveryAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -415,8 +470,8 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("ServiceCharge")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TableNumber")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("TableNumber")
+                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("DineinOrder");
                 });
