@@ -15,10 +15,10 @@ namespace Core.Models
         }
         
         public bool IsPaid { get; set; }
-        public string CustomerUsername { get; set; }
-        public string DeliveryAddress { get; set; }
-        public string ContactNumber { get; set; }
-        public string CustomerName { get; set; }
+        public string CustomerUsername { get; set; } = string.Empty;
+        public string DeliveryAddress { get; set; } = string.Empty;
+        public string ContactNumber { get; set; } = string.Empty;
+        public string CustomerName { get; set; } = string.Empty;
         public decimal DeliveryFee { get; set; } = 30;
 
     }

@@ -4,18 +4,14 @@ using Core.IServices;
 using Infrastructure.Context;
 using Infrastructure.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Win32;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace Resturant.Controllers
 {
     [Route("api/[controller]")]
+    [Route("api/v1/auth")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -37,6 +33,7 @@ namespace Resturant.Controllers
         //Register--------------------------------------------------------------------------------
 
         [HttpPost("Customerregister")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterD registerD )
         { 
             
@@ -329,6 +326,61 @@ namespace Resturant.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var username = User.FindFirstValue(ClaimTypes.Name) ?? User.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                return BadRequest("User not found.");
+            }
+
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = DateTime.MinValue;
+            await userManager.UpdateAsync(user);
+            return Ok("Logged out successfully.");
+        }
+
+        [Authorize]
+        [HttpGet("order-history/{username}")]
+        public IActionResult GetOrderHistory([FromRoute] string username)
+        {
+            var deliveryOrders = dataContext.DeliveryOrders
+                .Where(o => o.CustomerUsername == username || o.CustomerName == username)
+                .Select(o => new
+                {
+                    Type = "Delivery",
+                    o.Id,
+                    o.orderNumber,
+                    o.OrderDate,
+                    o.TotalPrice,
+                    o.Status
+                })
+                .ToList();
+
+            var takeawayOrders = dataContext.TakeawayOrders
+                .Where(o => o.CustomerName == username)
+                .Select(o => new
+                {
+                    Type = "Takeaway",
+                    o.Id,
+                    o.orderNumber,
+                    o.OrderDate,
+                    o.TotalPrice,
+                    o.Status
+                })
+                .ToList();
+
+            return Ok(deliveryOrders.Cast<object>().Concat(takeawayOrders.Cast<object>()));
         }
 
         

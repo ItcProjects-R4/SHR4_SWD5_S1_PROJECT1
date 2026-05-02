@@ -26,8 +26,6 @@ namespace Infrastructure.Services
         }
         DeliveryOrder IDelivaryOrderService.AddDelivaryOrder(DelivaryD order)
         {
-            var user = userManager.GetUserAsync(new System.Security.Claims.ClaimsPrincipal()).Result;
-
             var newOrder = new DeliveryOrder { Items = new List<OrderItems>() };
             newOrder.orderNumber = dailyCounter.DeliveryCount();
             newOrder.Status = "Pending";
@@ -36,7 +34,7 @@ namespace Infrastructure.Services
             newOrder.DeliveryAddress = order.DeliveryAddress;
             newOrder.ContactNumber = order.ContactNumber;
             newOrder.CustomerName = order.CustomerName;
-            newOrder.CustomerUsername = user.UserName;
+            newOrder.CustomerUsername = order.CustomerName;
 
             foreach (var item in order.Items)
             {

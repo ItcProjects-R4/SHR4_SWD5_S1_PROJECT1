@@ -34,14 +34,14 @@ The system can currently be used to:
 
 - Manage menu items and food categories
 - Organize items by country or cuisine
-- Create dine-in and delivery orders
+- Create dine-in, takeaway, and delivery orders
 - Handle user registration, activation, login, refresh token, password reset, and account updates
 - Support different roles such as `Admin`, `Cashier`, and `Customer`
-- Integrate online payment workflows with Paymob
+- Integrate online and cash payment workflows with Paymob plus internal payment records
 - Provide real-time order communication using SignalR
 - Allow a frontend application to consume and display backend data
 
-The backend also contains takeaway order service and repository logic, but a dedicated takeaway controller has not been added yet.
+The backend now exposes dedicated takeaway, inventory, offers, reservations, reviews, and reports endpoints in addition to the original order/account APIs.
 
 ## System Components
 
@@ -86,14 +86,20 @@ The current repository contains the backend codebase only. If you later add a fr
   - Countries
   - Order items
   - Dine-in orders
+  - Takeaway orders
   - Delivery orders
+  - Inventory tracking
+  - Reservations
+  - Offers and discounts
+  - Reviews and ratings
+  - Sales reports
   - Account activation
   - Refresh token flow
   - Forgot/reset password flow
   - Admin, Cashier, and Customer account management
-- Paymob payment URL generation
+- Paymob payment URL generation and payment record tracking
 - Daily order counters موجودة في الموديل وقاعدة البيانات
-- Takeaway order service/repository logic is present in the backend layer
+- Dedicated takeaway order controller and repository are included
 
 ## Technologies Used
 
@@ -423,7 +429,26 @@ The current repository contains working controllers for the following API areas.
 
 ### Takeaway Orders
 
-Takeaway order contracts and service/repository code exist in the backend layers, but there is currently no exposed controller endpoint in the `Resturant` API project.
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/TakeAwayOrder/getAllTakeAwayOrders` | Get all takeaway orders |
+| `GET` | `/api/TakeAwayOrder/getTakeAwayOrder/{id}` | Get takeaway order details |
+| `POST` | `/api/TakeAwayOrder/addTakeAwayOrder` | Create a takeaway order |
+| `PUT` | `/api/TakeAwayOrder/updateTakeAwayOrder/{id}` | Update a takeaway order |
+| `DELETE` | `/api/TakeAwayOrder/removeTakeAwayOrder/{id}` | Remove a takeaway order |
+
+### Inventory / Reports / Reservations / Reviews / Offers
+
+- `GET /api/v1/inventory`
+- `GET /api/v1/inventory/low-stock`
+- `POST /api/v1/inventory`
+- `GET /api/v1/reports/sales`
+- `GET /api/v1/offers`
+- `POST /api/v1/offers`
+- `GET /api/v1/reservations`
+- `POST /api/v1/reservations`
+- `GET /api/v1/reviews/item/{itemId}`
+- `POST /api/v1/reviews`
 
 ## API Documentation
 
@@ -576,7 +601,6 @@ Matamak/
 ## Future Improvements
 
 - Add the frontend source code to the repository
-- Add a dedicated `TakeAwayOrderController`
 - Connect the frontend to all backend endpoints
 - Add validation and centralized error handling
 - Add unit tests and integration tests
@@ -584,7 +608,6 @@ Matamak/
 - Move secrets to environment variables or user secrets
 - Add Docker support and CI/CD pipelines
 - Fix naming inconsistencies such as `Delivary`, `Oredr`, and `Reprosatory`
-- Complete payment flow using real order data instead of temporary values
 
 ## Author
 

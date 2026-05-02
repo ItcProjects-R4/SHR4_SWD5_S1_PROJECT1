@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Resturant.Controllers
 {
     [Route("api/[controller]")]
+    [Route("api/v1/countries")]
     [ApiController]
     public class CountryController : ControllerBase
     {
@@ -62,8 +63,8 @@ namespace Resturant.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("getCountryById")]
+        [HttpGet("{id}")]
             public IActionResult GetCountryById(int id)
             {
                 try
@@ -78,8 +79,8 @@ namespace Resturant.Controllers
             }
 
 
-        [Authorize]
             [HttpGet("getAllCountries")]
+            [HttpGet]
             public IActionResult GetAllCountries()
             {
                 var countries = countryRepo.GetAllCountries();

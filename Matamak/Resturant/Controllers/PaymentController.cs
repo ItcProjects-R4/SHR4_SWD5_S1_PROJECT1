@@ -1,30 +1,60 @@
-﻿using Core.IServices;
-using Microsoft.AspNetCore.Http;
+using Core.DTO;
+using Core.IReprosatory;
+using Core.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Resturant.Controllers
 {
     [Route("api/[controller]")]
+    [Route("api/v1/payments")]
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private readonly IPaymobService _paymobService;
+        private readonly IPaymobService paymobService;
+        private readonly IPaymentRepo paymentRepo;
 
-        public PaymentController(IPaymobService paymobService)
+        public PaymentController(IPaymobService paymobService, IPaymentRepo paymentRepo)
         {
-            _paymobService = paymobService;
+            this.paymobService = paymobService;
+            this.paymentRepo = paymentRepo;
+        }
+
+        [Authorize(Roles = "Cashier,Customer")]
+        [HttpPost]
+        public async Task<IActionResult> Process([FromBody] PaymentRequestD request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(await paymentRepo.ProcessPaymentAsync(request));
+        }
+
+        [Authorize(Roles = "Cashier,Admin")]
+        [HttpPut("confirm")]
+        public IActionResult Confirm([FromBody] PaymentConfirmD request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(paymentRepo.ConfirmPayment(request));
+        }
+
+        [Authorize(Roles = "Cashier,Admin")]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(paymentRepo.GetAll());
         }
 
         [HttpPost("pay/{orderId}")]
         public async Task<IActionResult> Pay(int orderId)
         {
-            // هنجيب الأوردر من الـ DB
-            // مؤقتاً هنحط قيم ثابتة للتجربة
-            int amountCents = 15000; // 150 جنيه = 15000 cents
-            string customerEmail = "test@test.com";
-
-            var paymentUrl = await _paymobService.GetPaymentUrlAsync(orderId, amountCents, customerEmail);
-
+            var paymentUrl = await paymobService.GetPaymentUrlAsync(orderId, 15000, "customer@matamak.local");
             return Ok(new { paymentUrl });
         }
     }

@@ -8,7 +8,7 @@ namespace Core.Models
     public class OrderItems
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public decimal PriceForOne { get; set; }
         public int Quantity { get; set; }
         public string? Note { get; set; }
