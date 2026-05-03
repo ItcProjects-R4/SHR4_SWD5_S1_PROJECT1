@@ -337,7 +337,7 @@ namespace Infrastructure.Reprosatory
                     audience: _configuration["Jwt:Audience"],
                     signingCredentials:signingCredentials   ,
                     claims:claims,
-                    expires:DateTime.Now.AddMinutes(15)
+                    expires:DateTime.Now.AddHours(8)
                 );
 
             var refreshToken = _accountServices.GenerateRefreshToken();
@@ -348,7 +348,7 @@ namespace Infrastructure.Reprosatory
             LoginTokenD loginTokenD = new LoginTokenD();
             loginTokenD.LoginToken = new JwtSecurityTokenHandler().WriteToken(token);
             loginTokenD.RefreshToken = refreshToken;
-            loginTokenD.TokenExpiration = DateTime.Now.AddMinutes(15);
+            loginTokenD.TokenExpiration = DateTime.Now.AddHours(8);
             loginTokenD.RefreshTokenExpiration = DateTime.Now.AddDays(7);
             return loginTokenD;
         }
@@ -390,7 +390,7 @@ namespace Infrastructure.Reprosatory
                     audience: _configuration["Jwt:Audience"],
                     signingCredentials: signingCredentials,
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(15)
+                    expires: DateTime.Now.AddHours(8)
                 );
 
             var newRefreshToken = _accountServices.GenerateRefreshToken();
@@ -402,7 +402,7 @@ namespace Infrastructure.Reprosatory
             {
                 LoginToken = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = newRefreshToken,
-                TokenExpiration = DateTime.Now.AddMinutes(15),
+                TokenExpiration = DateTime.Now.AddHours(8),
                 RefreshTokenExpiration = DateTime.Now.AddDays(7)
             };
         }

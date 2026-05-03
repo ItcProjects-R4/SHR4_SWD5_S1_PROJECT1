@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System;
 
 namespace Resturant
 {
@@ -88,7 +89,7 @@ namespace Resturant
                     ValidAudience = builder.Configuration["Jwt:Audience"],
 
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty)
                     )
                 };
             });
@@ -102,7 +103,13 @@ namespace Resturant
             builder.Services.AddScoped<IOrderItemsRepo, OrderItemsRepo>();
             builder.Services.AddScoped<IDineinOrderRepo, DineinOrderRepo>();
             builder.Services.AddScoped<IDeliveryOrderRepo, DelivaryOrderRepo>();
-             builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+            builder.Services.AddScoped<ITakeAwayOrderRepo, TakeAwayOrderRepo>();
+            builder.Services.AddScoped<IInventoryRepo, InventoryRepo>();
+            builder.Services.AddScoped<IOfferRepo, OfferRepo>();
+            builder.Services.AddScoped<IReservationRepo, ReservationRepo>();
+            builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
+            builder.Services.AddScoped<IPaymentRepo, PaymentRepo>();
+            builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 
 
             // =========================
@@ -117,7 +124,7 @@ namespace Resturant
             builder.Services.AddScoped<IDailyCounter, DailyCounter>();
             var paymobSettings = builder.Configuration
              .GetSection("PaymobSettings")
-             .Get<PaymobSettings>();
+             .Get<PaymobSettings>() ?? new PaymobSettings();
 
             builder.Services.AddSingleton(paymobSettings);
 
@@ -132,6 +139,7 @@ namespace Resturant
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
 
             // =========================
             // Middleware

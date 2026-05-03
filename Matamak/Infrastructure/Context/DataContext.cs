@@ -22,6 +22,12 @@ namespace Infrastructure.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<DineinOrder> DineinOrders { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
+        public DbSet<TakeawayOrder> TakeawayOrders { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<PaymentRecord> PaymentRecords { get; set; }
         public DbSet<_DailyDeliverCounter> DailyDeliveryCounter { get; set; }
             public DbSet<_DailyDineinCounter> DailyDineinCounter { get; set; }
 

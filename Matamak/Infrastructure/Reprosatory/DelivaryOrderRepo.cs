@@ -51,12 +51,7 @@ namespace Infrastructure.Reprosatory
 
         public List<DeliveryOrderMV> GetDeliveryOrderByCustomerId(string custmorusername)
         {
-            var order = dataContext.DeliveryOrders.Where(o=> o.CustomerName == custmorusername);
-
-            if (order == null || !order.Any())
-            {
-                throw new Exception($"No delivery orders found for customer username {custmorusername}.");
-            }
+            var order = dataContext.DeliveryOrders.Where(o => o.CustomerName == custmorusername || o.CustomerUsername == custmorusername);
             List<DeliveryOrderMV> deliveryOrdersMV = new List<DeliveryOrderMV>();
 
             foreach (var o in order)

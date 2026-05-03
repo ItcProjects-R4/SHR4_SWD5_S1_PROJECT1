@@ -7,12 +7,11 @@ namespace Core.DTO
 {
     public class TakeAwayD
     {
-        [Required]
-        public int orderNumber { get; set; }
-        [Required]
-        public DateTime OrderDate { get; set; }
+        public int? orderNumber { get; set; }
+        public DateTime? OrderDate { get; set; }
         [Required]
         public List<OrderItemsD> Items { get; set; }= new List<OrderItemsD>();
         public decimal TotalPrice { get; set; }
+        public string CustomerName { get; set; } = string.Empty;
     }
 }

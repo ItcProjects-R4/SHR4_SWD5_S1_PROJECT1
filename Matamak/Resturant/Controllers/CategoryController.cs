@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Resturant.Controllers
 {
     [Route("api/[controller]")]
+    [Route("api/v1/categories")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -20,8 +21,8 @@ namespace Resturant.Controllers
             this.dataContext = dataContext;
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("getCategoryById")]
+        [HttpGet("{id}")]
         public IActionResult GetCategoryById(int id)
         {
             try
@@ -36,8 +37,8 @@ namespace Resturant.Controllers
         }
 
 
-        [Authorize]
         [HttpGet("getAllCategories")]
+        [HttpGet]
         public IActionResult GetAllCategories()
         {
             var categories = catrgoryRepo.GetAllCategories();
