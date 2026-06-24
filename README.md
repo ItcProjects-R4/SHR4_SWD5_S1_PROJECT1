@@ -164,27 +164,27 @@ _Here are some visual insights into the Matamak system:_
 
 #### Customer Menu Page
 
-![Customer Menu Page](screenshots/customer_menu.png)
+![Customer Menu Page](Matamak/screenshots/customer_menu.png)
 
 ### 💼 Staff & Cashier Interface
 
 #### Cashier Dashboard
 
-![Cashier Dashboard](screenshots/cashier_dashboard.png)
+![Cashier Dashboard](Matamak/screenshots/cashier_dashboard.png)
 
 #### Cashier Order Placement Screen
 
-![Cashier Order Placement Screen](screenshots/cashier_order.png)
+![Cashier Order Placement Screen](Matamak/screenshots/cashier_order.png)
 
 ### 👑 Administrator Panel
 
 #### Admin Dashboard Overview
 
-![Admin Dashboard Overview](screenshots/admin_dashboard.png)
+![Admin Dashboard Overview](Matamak/screenshots/admin_dashboard.png)
 
 #### Menu Management
 
-![Menu Management](screenshots/menu_management.png)
+![Menu Management](Matamak/screenshots/menu_management.png)
 
 ---
 
