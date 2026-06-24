@@ -1,4 +1,4 @@
-﻿using Core.DTO;
+using Core.DTO;
 using Core.IReprosatory;
 using Core.IServices;
 using Core.ModelView;
@@ -26,32 +26,32 @@ namespace Infrastructure.Reprosatory
             this.orderItemsService = orderItemsService;
             this.dataContext = dataContext;
         }
-
-        public void CancelDeliveryOrder(int deliveryId)
+        public async Task CancelDeliveryOrder(int deliveryId)
         {
             var order = dataContext.DeliveryOrders.Find(deliveryId);
             if (order == null)
             {
                 throw new Exception($"Delivery order from service is null for ID {deliveryId}.");
             }
+
             if (order.Status != "Delivered" && order.Status != "OutForDelivery")
             {
                 order.Status = "Canceled";
                 dataContext.DeliveryOrders.Update(order);
-                dataContext.SaveChanges();
-               
+                await dataContext.SaveChangesAsync();
+                await BroadcastDeliveryOrderStatusAsync(order, "تم إلغاء الطلب.");
             }
             else
             {
                 throw new Exception($"Cannot cancel an order that is already delivered or out for delivery for ID {deliveryId}.");
             }
-               
-          
         }
 
         public List<DeliveryOrderMV> GetDeliveryOrderByCustomerId(string custmorusername)
         {
-            var order = dataContext.DeliveryOrders.Where(o => o.CustomerName == custmorusername || o.CustomerUsername == custmorusername);
+            var order = dataContext.DeliveryOrders
+                .Include(o => o.Items)
+                .Where(o => o.CustomerName == custmorusername || o.CustomerUsername == custmorusername);
             List<DeliveryOrderMV> deliveryOrdersMV = new List<DeliveryOrderMV>();
 
             foreach (var o in order)
@@ -62,24 +62,41 @@ namespace Infrastructure.Reprosatory
                     Status = o.Status,
                     OrderDate = o.OrderDate,
                     OrderNumber = o.orderNumber,
-                  
+                    TotalPrice = o.TotalPrice,
+                    DeliveryAddress = o.DeliveryAddress,
+                    ContactNumber = o.ContactNumber,
+                    CustomerName = o.CustomerName,
+                    Items = new List<OrderItemsMV>()
                 };
+                foreach (var item in o.Items)
+                {
+                    orderMV.Items.Add(orderItemsService.GetOrderItem(item));
+                }
                 deliveryOrdersMV.Add(orderMV);
             }
 
             return deliveryOrdersMV;
         }
-
         async Task IDeliveryOrderRepo.AddDeliveryOrder(DelivaryD order)
         {
-
             var result = delivaryOrderService.AddDelivaryOrder(order);
-          
+
             dataContext.DeliveryOrders.Add(result);
-            dataContext.SaveChanges();
-            await hubContext.Clients.Group("Cashiers").SendAsync("ReceiveNewOrder", order);
+            await dataContext.SaveChangesAsync();
 
+            var orderView = new DeliveryOrderMV
+            {
+                Id = result.Id,
+                Status = result.Status,
+                OrderNumber = result.orderNumber,
+                OrderDate = result.OrderDate,
+                TotalPrice = result.TotalPrice,
+                DeliveryAddress = result.DeliveryAddress,
+                ContactNumber = result.ContactNumber,
+                CustomerName = result.CustomerName
+            };
 
+            await hubContext.Clients.Group("Cashiers").SendAsync("ReceiveNewOrder", orderView);
         }
 
         List<DeliveryOrderMV> IDeliveryOrderRepo.GetAllDeliveryOrders()
@@ -102,15 +119,15 @@ namespace Infrastructure.Reprosatory
             return order;
 
         }
-
-        void IDeliveryOrderRepo.HandOrderToCustmor(int deliveryId)
+        async Task IDeliveryOrderRepo.HandOrderToCustmor(int deliveryId)
         {
             var order = dataContext.DeliveryOrders.Find(deliveryId);
             if (order != null && order.Status != "Pending" && order.Status != "Canceled")
             {
                 order.Status = "Delivered";
                 dataContext.DeliveryOrders.Update(order);
-                dataContext.SaveChanges();
+                await dataContext.SaveChangesAsync();
+                await BroadcastDeliveryOrderStatusAsync(order, "تم تسليم الطلب للعميل.");
             }
             else
             {
@@ -125,8 +142,8 @@ namespace Infrastructure.Reprosatory
             {
                 order.Status = "OutForDelivery";
                 dataContext.DeliveryOrders.Update(order);
-                dataContext.SaveChanges();
-                await hubContext.Clients.Group("User" +order.CustomerUsername).SendAsync("ReceiveOrderStatusUpdate", $"Your order with Number {order.orderNumber} is now out for delivery.");
+                await dataContext.SaveChangesAsync();
+                await BroadcastDeliveryOrderStatusAsync(order, $"طلبك رقم {order.orderNumber} خرج للتوصيل.");
             }
             else
             {
@@ -162,5 +179,34 @@ namespace Infrastructure.Reprosatory
             } else throw new Exception($"Delivery order from service is null for ID {deliveryId}.");
 
         }
+        private async Task BroadcastDeliveryOrderStatusAsync(DeliveryOrder order, string message)
+        {
+            var orderView = CreateDeliveryOrderView(order);
+            await hubContext.Clients.Group("Cashiers").SendAsync("ReceiveOrderStatusChanged", orderView, message);
+
+            if (!string.IsNullOrWhiteSpace(order.CustomerUsername))
+            {
+                await hubContext.Clients.Group("User_" + order.CustomerUsername).SendAsync("ReceiveOrderStatusChanged", orderView, message);
+                await hubContext.Clients.Group("User_" + order.CustomerUsername).SendAsync("ReceiveOrderStatusUpdate", message);
+            }
+        }
+
+        private static DeliveryOrderMV CreateDeliveryOrderView(DeliveryOrder order)
+        {
+            return new DeliveryOrderMV
+            {
+                Id = order.Id,
+                Status = order.Status,
+                OrderNumber = order.orderNumber,
+                OrderDate = order.OrderDate,
+                TotalPrice = order.TotalPrice,
+                DeliveryAddress = order.DeliveryAddress,
+                ContactNumber = order.ContactNumber,
+                CustomerName = order.CustomerName
+            };
+        }
     }
 }
+
+
+

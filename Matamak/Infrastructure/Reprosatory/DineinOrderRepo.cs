@@ -1,4 +1,4 @@
-﻿using Core.DTO;
+using Core.DTO;
 using Core.IReprosatory;
 using Core.IServices;
 using Infrastructure.Context;
@@ -22,36 +22,14 @@ namespace Infrastructure.Reprosatory
 
         public void ChangeDineinOrderStatus(int orderNumber, string status)
         {
-            if(status == "Canceled")
+            var order = dataContext.DineinOrders.Find(orderNumber);
+            if (order == null)
             {
-                var order = dataContext.DineinOrders.Find(orderNumber);
-                if (order != null && order.Status != "Completed")
-                {
-                    order.Status = status;
-                    dataContext.SaveChanges();
-                }
-                else
-                {
-                    throw new InvalidOperationException("Only pending orders can be canceled.");
-                }
+                throw new Exception("Dine-in order not found.");
             }
-            else if(status == "Completed")
-            {
-                var order = dataContext.DineinOrders.Find(orderNumber);
-                if (order != null && order.Status != "Canceled")
-                {
-                    order.Status = status;
-                    dataContext.SaveChanges();
-                }
-                else
-                {
-                    throw new InvalidOperationException("Only pending orders can be completed.");
-                }
-            }
-            else
-            {
-                throw new ArgumentException("Invalid status. Status must be either  'Completed', or 'Canceled'.");
-            }
+
+            order.Status = status;
+            dataContext.SaveChanges();
         }
 
         void IDineinOrderRepo.AddDineinOrder(DineinD order)

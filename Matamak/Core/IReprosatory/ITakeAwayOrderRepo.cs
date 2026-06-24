@@ -6,10 +6,15 @@ namespace Core.IReprosatory
 {
     public interface ITakeAwayOrderRepo
     {
-        void AddTakeAwayOrder(TakeAwayD order);
-        void RemoveTakeAwayOrder(int orderNumber);
+        Task AddTakeAwayOrder(TakeAwayD order);
+        Task RemoveTakeAwayOrder(int orderNumber);
         void UpdateTakeAwayOrder(TakeAwayD order, int orderNumber);
         TakeAwayOrderMV GetTakeAwayOrder(int orderNumber);
         List<TakeAwayOrderMV> GetAllTakeAwayOrders();
+        List<TakeAwayOrderMV> GetTakeAwayOrderByCustomerName(string customerName);
+        Task ChangeTakeawayOrderStatus(int orderNumber, string status);
     }
 }
+
+
+

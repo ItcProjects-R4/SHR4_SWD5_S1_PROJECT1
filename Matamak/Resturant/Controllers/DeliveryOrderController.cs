@@ -62,13 +62,13 @@ namespace Resturant.Controllers
 
         [Authorize(Roles ="Customer")]
         [HttpPost("addDelveryOrder")]
-        public IActionResult AddDeliveryOrder(DelivaryD delivaryD)
+        public async Task<IActionResult> AddDeliveryOrder(DelivaryD delivaryD)
         {
             if (ModelState.IsValid == false)
             {
                 return BadRequest(ModelState);
             }
-            deliveryOrderRepo.AddDeliveryOrder(delivaryD);
+            await deliveryOrderRepo.AddDeliveryOrder(delivaryD);
             return Ok("Add Succsefuly");
         }
 
@@ -91,13 +91,13 @@ namespace Resturant.Controllers
             }
         }
 
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer,Cashier")]
         [HttpPut("cancelDeliveryOrder/{id}")]
-        public IActionResult CancelDeliveryOrder([FromRoute] int id)
+        public async Task<IActionResult> CancelDeliveryOrder([FromRoute] int id)
         {
             try
             {
-                deliveryOrderRepo.CancelDeliveryOrder(id);
+                await deliveryOrderRepo.CancelDeliveryOrder(id);
                 return Ok("Canceled Successfully");
             }
             catch (Exception ex)
@@ -109,11 +109,11 @@ namespace Resturant.Controllers
 
         [Authorize(Roles ="Cashier")]
          [HttpPut("handOrderToDriver/{id}")]
-         public IActionResult HandOrderToDriver([FromRoute] int id)
+         public async Task<IActionResult> HandOrderToDriver([FromRoute] int id)
          {
             try
             {
-                deliveryOrderRepo.HandOrderToDriver(id);
+                await deliveryOrderRepo.HandOrderToDriver(id);
                 return Ok("Handed to driver successfully");
             }
             catch (Exception ex)
@@ -124,11 +124,11 @@ namespace Resturant.Controllers
 
         [Authorize(Roles = "Customer")]
         [HttpPut("handOrderToCustomer/{id}")]
-        public IActionResult HandOrderToCustomer([FromRoute] int id)
+        public async Task<IActionResult> HandOrderToCustomer([FromRoute] int id)
         {
             try
             {
-                deliveryOrderRepo.HandOrderToCustmor(id);
+                await deliveryOrderRepo.HandOrderToCustmor(id);
                 return Ok("Handed to customer successfully");
             
             }
@@ -155,3 +155,5 @@ namespace Resturant.Controllers
         }
     }
 }
+
+

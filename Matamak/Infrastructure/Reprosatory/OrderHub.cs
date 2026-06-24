@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -13,18 +13,20 @@ namespace Infrastructure.Reprosatory
         {
             var user = Context.User;
 
-            // الكاشير
-            if (user.IsInRole("Cashier"))
+            if (user?.IsInRole("Cashier") == true || user?.IsInRole("Admin") == true)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, "Cashiers");
             }
 
-            // اليوزر
-            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // Use username to match "User_" + CustomerName in order broadcasts
+            var username = user?.FindFirst(ClaimTypes.Name)?.Value 
+                           ?? user?.FindFirst("unique_name")?.Value 
+                           ?? user?.FindFirst("name")?.Value 
+                           ?? Context.User?.Identity?.Name;
 
-            if (userId != null)
+            if (!string.IsNullOrWhiteSpace(username))
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, "User_" + userId);
+                await Groups.AddToGroupAsync(Context.ConnectionId, "User_" + username);
             }
 
             await base.OnConnectedAsync();

@@ -1,4 +1,4 @@
-﻿using Core.IReprosatory;
+using Core.IReprosatory;
 using Infrastructure.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -15,14 +15,16 @@ namespace Infrastructure.Reprosatory
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IDeliveryOrderRepo deliveryOrderRepo;
+        private readonly ITakeAwayOrderRepo takeAwayOrderRepo;
         private readonly IAccountServices _accountServices;
         private readonly IConfiguration _configuration;
 
-        public AccountRepo(UserManager<AppUser> userManager,IDeliveryOrderRepo deliveryOrderRepo, IConfiguration configuration, IAccountServices accountServices)
+        public AccountRepo(UserManager<AppUser> userManager,IDeliveryOrderRepo deliveryOrderRepo, ITakeAwayOrderRepo takeAwayOrderRepo, IConfiguration configuration, IAccountServices accountServices)
         {   
                 _accountServices = accountServices;
             _userManager = userManager;
             this.deliveryOrderRepo = deliveryOrderRepo;
+            this.takeAwayOrderRepo = takeAwayOrderRepo;
             _configuration = configuration;
         }
 
@@ -135,10 +137,13 @@ namespace Infrastructure.Reprosatory
                 Address = user.Address,
                 FullName = user.FullName,
                 deliveryOrders = new List<DeliveryOrderMV>(),
+                takeawayOrders = new List<TakeAwayOrderMV>(),
                 Role = "Customer"
             };
                 var orders =  deliveryOrderRepo.GetDeliveryOrderByCustomerId(username);
                 customerMV.deliveryOrders = orders;
+                var takeawayOrders = takeAwayOrderRepo.GetTakeAwayOrderByCustomerName(username);
+                customerMV.takeawayOrders = takeawayOrders;
 
             return customerMV;
         }
@@ -464,3 +469,5 @@ namespace Infrastructure.Reprosatory
         }
     }
 }
+
+

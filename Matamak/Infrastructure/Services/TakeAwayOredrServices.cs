@@ -26,7 +26,8 @@ namespace Infrastructure.Services
                 orderNumber = order.orderNumber ?? GetNextOrderNumber(),
                 OrderDate = order.OrderDate ?? DateTime.UtcNow,
                 TotalPrice = order.TotalPrice,
-                CustomerName = order.CustomerName
+                CustomerName = order.CustomerName,
+                Status = "Preparing"   // Default status: under preparation
             };
 
             foreach (var item in order.Items)

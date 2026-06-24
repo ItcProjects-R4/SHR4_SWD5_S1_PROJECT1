@@ -1,4 +1,4 @@
-﻿using Core.DTO;
+using Core.DTO;
 using Core.IReprosatory;
 using Core.IServices;
 using Infrastructure.Context;
@@ -32,8 +32,9 @@ namespace Resturant.Controllers
 
         //Register--------------------------------------------------------------------------------
 
-        [HttpPost("Customerregister")]
-        [HttpPost("register")]
+        [HttpPost]
+        [Route("Customerregister")]
+        [Route("register")]
         public async Task<IActionResult> Register(RegisterD registerD )
         { 
             

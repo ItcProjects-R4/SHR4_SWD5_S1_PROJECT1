@@ -1,4 +1,4 @@
-﻿
+
 
 namespace Infrastructure.Services
 {
@@ -51,9 +51,9 @@ namespace Infrastructure.Services
         {
             var items = new List<ItemsModelView >();
             var item1 = dataContext.Items.ToList();
-            if (item1 == null || item1.Count == 0)
+            if (item1 == null)
             {
-                throw new Exception("No items found.");
+                return items;
             }
             foreach (var item in item1)
             {
@@ -96,9 +96,9 @@ namespace Infrastructure.Services
         {
             var items = new List<ItemsModelView>();
             var item = dataContext.Items.Where(i => i.CatogryId == categoryId).ToList();
-            if (item == null || item.Count == 0)
+            if (item == null)
             {
-                throw new Exception("No items found for the specified category.");
+                return items;
             }
             foreach (var i in item)
             {
@@ -121,9 +121,9 @@ namespace Infrastructure.Services
         {
             var items = new List<ItemsModelView>();
             var item = dataContext.Items.Where(i => i.CountryId == countryId).ToList();
-            if (item == null || item.Count == 0)
+            if (item == null)
             {
-                throw new Exception("No items found for the specified country.");
+                return items;
             }
             foreach (var i in item)
             {
@@ -146,9 +146,9 @@ namespace Infrastructure.Services
         {
             var items = new List<ItemsModelView>();
             var item = dataContext.Items.Where(i => i.CountryId == countryId && i.CatogryId == categoryId).ToList();
-            if (item == null || item.Count == 0)
+            if (item == null)
             {
-                throw new Exception("No items found for the specified country and category.");
+                return items;
             }
             foreach (var i in item)
             {

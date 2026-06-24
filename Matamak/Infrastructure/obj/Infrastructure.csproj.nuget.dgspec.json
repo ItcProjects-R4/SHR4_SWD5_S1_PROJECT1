@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\Infrastructure.csproj": {}
+    "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Core\\Core.csproj": {
+    "C:\\Users\\mos18\\Downloads\\Matamak\\Core\\Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Core\\Core.csproj",
+        "projectUniqueName": "C:\\Users\\mos18\\Downloads\\Matamak\\Core\\Core.csproj",
         "projectName": "Core",
-        "projectPath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Core\\Core.csproj",
+        "projectPath": "C:\\Users\\mos18\\Downloads\\Matamak\\Core\\Core.csproj",
         "packagesPath": "C:\\Users\\mos18\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Core\\obj\\",
+        "outputPath": "C:\\Users\\mos18\\Downloads\\Matamak\\Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -350,14 +350,14 @@
         }
       }
     },
-    "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\mos18\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\obj\\",
+        "outputPath": "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -379,8 +379,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Core\\Core.csproj": {
-                "projectPath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Core\\Core.csproj"
+              "C:\\Users\\mos18\\Downloads\\Matamak\\Core\\Core.csproj": {
+                "projectPath": "C:\\Users\\mos18\\Downloads\\Matamak\\Core\\Core.csproj"
               }
             }
           }

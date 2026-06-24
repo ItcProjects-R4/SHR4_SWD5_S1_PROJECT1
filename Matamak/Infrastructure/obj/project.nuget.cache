@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5wUUTkAKU88=",
+  "dgSpecHash": "sBRb/d5lD9U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mos18\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\mos18\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
@@ -83,9 +83,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'Newtonsoft.Json' 11.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr",
-      "projectPath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\Infrastructure.csproj",
+      "projectPath": "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\Infrastructure.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\mos18\\Downloads\\project\\Matamak\\Infrastructure\\Infrastructure.csproj",
+      "filePath": "C:\\Users\\mos18\\Downloads\\Matamak\\Infrastructure\\Infrastructure.csproj",
       "libraryId": "Newtonsoft.Json",
       "targetGraphs": [
         "net10.0"

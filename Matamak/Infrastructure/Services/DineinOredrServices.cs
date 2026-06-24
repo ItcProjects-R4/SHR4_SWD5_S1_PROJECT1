@@ -1,4 +1,4 @@
-﻿
+
 
 using System.Net.NetworkInformation;
 
@@ -37,19 +37,24 @@ namespace Infrastructure.Services
         List<DineInOrderMV> IDieninOrderService.GetAllDineinOrders()
         {
             var dineinOrders = new List<DineInOrderMV>();
-            var dineinOrderList = dataContext.DineinOrders.ToList();
+            var dineinOrderList = dataContext.DineinOrders.Include(o => o.Items).ToList();
             
             foreach (var order in dineinOrderList)
             {
                 var dineinD = new DineInOrderMV
                 {
                     Id = order.Id,
+                    status = order.Status,
                     orderNumber = order.orderNumber,
                     OrderDate = order.OrderDate,
                     TotalPrice = order.TotalPrice,
                     TableNumber = order.TableNumber,
-                  
+                    Items = new List<OrderItemsMV>()
                 };
+                foreach (var item in order.Items)
+                {
+                    dineinD.Items.Add(orderItemsService.GetOrderItem(item));
+                }
                 dineinOrders.Add(dineinD);
             }
             return dineinOrders;
@@ -81,7 +86,7 @@ namespace Infrastructure.Services
         DineinOrder IDieninOrderService.UpdateDineinOrder(DineinD order, int orderNumber)
         {
             
-            var dineinOrder = dataContext.DineinOrders.Include(o => o.Items).FirstOrDefault(o => o.orderNumber == orderNumber);
+            var dineinOrder = dataContext.DineinOrders.Include(o => o.Items).FirstOrDefault(o => o.Id == orderNumber || o.orderNumber == orderNumber);
             if (dineinOrder == null)
             {
                 throw new Exception("Order not found");

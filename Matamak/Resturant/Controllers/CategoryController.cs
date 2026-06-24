@@ -1,4 +1,4 @@
-﻿using Core.DTO;
+using Core.DTO;
 using Core.IReprosatory;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
@@ -21,8 +21,9 @@ namespace Resturant.Controllers
             this.dataContext = dataContext;
         }
 
-        [HttpGet("getCategoryById")]
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getCategoryById")]
+        [Route("{id}")]
         public IActionResult GetCategoryById(int id)
         {
             try
@@ -37,8 +38,9 @@ namespace Resturant.Controllers
         }
 
 
-        [HttpGet("getAllCategories")]
         [HttpGet]
+        [Route("getAllCategories")]
+        [Route("")]
         public IActionResult GetAllCategories()
         {
             var categories = catrgoryRepo.GetAllCategories();

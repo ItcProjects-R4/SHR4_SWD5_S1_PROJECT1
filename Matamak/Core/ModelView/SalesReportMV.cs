@@ -11,5 +11,7 @@ namespace Core.ModelView
         public decimal GrossRevenue { get; set; }
         public decimal NetRevenue { get; set; }
         public decimal TotalDiscounts { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public int TotalOrdersCount { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Core.DTO;
+using Core.DTO;
 using Core.IReprosatory;
 using Core.IServices;
 using Core.Models;
@@ -55,53 +55,35 @@ namespace Infrastructure.Reprosatory
         List<ItemsModelView> IItemRepo.GetItemsByCategory(int categoryId)
         {
             var items1 = _item.GetItemsByCategory(categoryId);
-            if (items1 == null || items1.Count == 0)
-            {
-               throw new Exception($"Items From Service are null for Category ID {categoryId}.");
-            }
-            return items1;
+            return items1 ?? new List<ItemsModelView>();
         }   
         List<ItemsModelView> IItemRepo.GetItemsByCountry(int countryId)
         {
             var items1 = _item.GetItemsByCountry(countryId);
-            if (items1 == null || items1.Count == 0)
-            {
-                throw new Exception($"Items From Service are null for Country ID {countryId}.");
-            }
-            return items1;
+            return items1 ?? new List<ItemsModelView>();
         }
            
         List<ItemsModelView> IItemRepo.GetItensByCountryAndCategory(int? countryId, int? categoryId)
         {
             if (!countryId.HasValue)
             {
-                var items1 = _item.GetItemsByCategory(categoryId.Value);
-                if (items1 == null || items1.Count == 0)
+                if (!categoryId.HasValue)
                 {
-                    throw new Exception($"Items From Service are null .");
+                    return new List<ItemsModelView>();
                 }
-
-                return items1;
+                var items1 = _item.GetItemsByCategory(categoryId.Value);
+                return items1 ?? new List<ItemsModelView>();
             }
             else if (!categoryId.HasValue)
             {
                 var items1 = _item.GetItemsByCountry(countryId.Value);
-                if (items1 == null || items1.Count == 0)
-                {
-                   throw new Exception($"Items From Service are null for Country ID {countryId}.");
-                }
-                return items1;
+                return items1 ?? new List<ItemsModelView>();
             }
             else
             {
                 var items1 = _item.GetItensByCountryAndCategory(countryId, categoryId);
-                if (items1 == null || items1.Count == 0)
-                {
-                    throw new Exception($"Items From Service are null for Country ID {countryId} and Category ID {categoryId}.");
-                }
-                return items1;
+                return items1 ?? new List<ItemsModelView>();
             }
-
         }
 
         void IItemRepo.RemoveItem(int id)
