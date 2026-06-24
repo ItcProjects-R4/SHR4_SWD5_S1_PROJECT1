@@ -1,228 +1,228 @@
-# 🍽️ مطعمك (Matamak) - نظام إدارة وطلب الوجبات للمطاعم
+# 🍽️ Matamak - Restaurant Ordering & Management System
 
-"مطعمك" هو نظام شامل وحديث لإدارة وطلب الوجبات في المطاعم، تم تصميمه لرقمنة العمليات اليومية المتعلقة بالأغذية. يربط النظام بين العملاء والكاشيرية ومسؤولي النظام (الآدمن) من خلال سير عمل سلس في الوقت الفعلي (Real-time)، مما يربط واجهة أمامية تفاعلية بالكامل مبنية بـ Angular مع واجهة خلفية قوية مبنية بـ C# .NET 10 Web API.
-
----
-
-## 📖 فكرة المشروع
-
-الفكرة الأساسية وراء "مطعمك" هي بناء منصة موحدة تدير دورة حياة طلبات المطعم بالكامل. يمكن للعملاء تصفح القوائم، تطبيق الخصومات، إجراء مدفوعات آمنة عبر الإنترنت، وتتبع حالة طلباتهم في الوقت الفعلي. يمكن للموظفين (الكاشيرية) إدارة ومعالجة الطلبات المحلية (Dine-in)، أو الطلبات الخارجية (Takeaway)، أو طلبات التوصيل (Delivery)، في حين يقوم المسؤولون (Admins) بإدارة المخزون، وتحليل تقارير المبيعات، وضبط إعدادات النظام. جميع هذه الميزات مفعّلة بالكامل وتفاعلية عبر كل من تطبيق الواجهة الأمامية والواجهة الخلفية (API).
+Matamak is a comprehensive, modern restaurant ordering and management system designed to digitalize daily food operations. It connects customers, cashiers, and system administrators through a seamless real-time workflow, linking a fully interactive Angular frontend with a robust C# .NET 10 Web API backend.
 
 ---
 
-## 🎯 أهداف المشروع
+## 📖 Project Concept
 
-- **عمليات سلسة**: أتمتة مسارات العمل للطلبات المحلية (Dine-in)، الخارجية (Takeaway)، والتوصيل (Delivery).
-- **التنسيق في الوقت الفعلي**: تقديم تحديثات فورية لحالة الطلبات باستخدام تقنية WebSockets.
-- **صلاحيات آمنة**: تطبيق نظام التحكم في الوصول المستند إلى الأدوار (RBAC) للفصل بين العملاء، الكاشيرية، والمسؤولين.
-- **واجهة مستخدم حديثة**: تقديم تجربة مستخدم بديهية، متجاوبة، وذات مظهر جمالي جذاب.
-- **دمج الدفع الإلكتروني**: تمكين عمليات الدفع عبر الإنترنت من خلال محاكاة بوابة الدفع الإلكتروني (Paymob).
+The core idea behind Matamak is to build a unified platform that manages the entire lifecycle of restaurant orders. Customers can browse menus, apply discounts, make secure online payments, and track their order status in real time. Staff (cashiers) can manage and process dine-in, takeaway, or delivery orders, while admins manage inventory, analyze sales reports, and configure system settings. All of these features are fully implemented and interactive across both the frontend application and the backend API.
 
 ---
 
-## 🛠️ التقنيات المستخدمة
+## 🎯 Project Objectives
 
-### الواجهة الخلفية (Backend)
-
-- **لغة البرمجة وبيئة التشغيل**: C# مع .NET 10 SDK
-- **إطار العمل**: ASP.NET Core Web API (مبني على بنية Clean Architecture الهيكلية)
-- **قاعدة البيانات والـ ORM**: SQL Server مع Entity Framework Core 10 (منهجية Code-First)
-- **المصادقة والصلاحيات**: ASP.NET Core Identity مع التحقق من رموز JWT Bearer
-- **الاتصال في الوقت الفعلي**: ASP.NET Core SignalR
-- **خدمة البريد الإلكتروني**: MailKit & MimeKit (التكامل مع Gmail SMTP)
-- **بوابة الدفع**: التكامل مع واجهة برمجة تطبيقات Paymob API
-- **توثيق الواجهة البرمجية (API)**: Swagger UI / OpenAPI
-
-### الواجهة الأمامية (Frontend)
-
-- **إطار العمل**: Angular 22
-- **لغة البرمجة**: TypeScript
-- **إدارة البيانات والحالات**: RxJS Observables
-- **التنسيق والتصميم**: Sass / SCSS، HTML5، Vanilla CSS
+- **Seamless Operations**: Automate dine-in, takeaway, and delivery order workflows.
+- **Real-Time Coordination**: Provide immediate status updates for orders using WebSockets.
+- **Secure Authorization**: Implement role-based access control (RBAC) separating Customers, Cashiers, and Admins.
+- **Modern Interface**: Provide an intuitive, responsive, and aesthetically pleasing user experience.
+- **Online Payment Integration**: Enable online payment workflows through payment gateway simulation (Paymob).
 
 ---
 
-## ✨ الميزات الرئيسية
+## 🛠️ Technologies Used
 
-### 👤 تجربة العميل (Customer Experience)
+### Backend
 
-- **الطلب عبر الإنترنت**: تقديم طلبات خارجية (Takeaway) أو توصيل (Delivery) مع إضافة ملاحظات مخصصة وحساب المجموع الكلي.
-- **تصفح القائمة**: تصفية الوجبات حسب الفئة أو بلد المنشأ/المطبخ، مع البحث النصي الفوري في الوقت الفعلي.
-- **سجل الطلبات وتتبعها**: الاطلاع على المعاملات السابقة، والحالات الفورية للطلبات، ومعرفات التتبع التسلسلية الفريدة لكل طلب.
-- **إلغاء الطلبات الخارجية**: خيار إلغاء الطلب المباشر ("إلغاء الطلب") من صفحة الملف الشخصي للعميل.
-- **التحكم في الحساب**: تسجيل الدخول، إنشاء الحساب، والتحقق عبر رمز OTP المرسل للبريد الإلكتروني لتفعيل الحساب أو إعادة تعيين كلمة المرور.
+- **Language & Runtime**: C# with .NET 10 SDK
+- **Framework**: ASP.NET Core Web API (Clean Architecture structure)
+- **Database & ORM**: SQL Server with Entity Framework Core 10 (Code-First)
+- **Authentication**: ASP.NET Core Identity & JWT Bearer Token validation
+- **Real-Time Communication**: ASP.NET Core SignalR
+- **Mailing Service**: MailKit & MimeKit (Gmail SMTP integration)
+- **Payment Gateway**: Paymob API Integration
+- **API Documentation**: Swagger UI / OpenAPI
 
-### 💼 تجربة الموظفين (لوحة تحكم الكاشير - Cashier Dashboard)
+### Frontend
 
-- **إدارة مسار عمل الطلبات**: عرض وتحديث الطلبات الحية المصنفة إلى محلي (Dine-In)، وخارجي (Takeaway)، وتوصيل (Delivery).
-  - _التوصيل (Delivery)_: تحويل الحالة من قيد الانتظار (_Pending_) ➡️ مع السائق (_With Driver_) ➡️ مكتمل (_Completed_)، أو إلغاء الطلب.
-  - _المحلي (Dine-In)_: تتبع حي للطاولات وتغيير حالاتها (قيد الانتظار _Pending_ ➡️ قيد الطهي _Cooking_ ➡️ تم تقديمها _Served_ ➡️ مكتمل _Completed_).
-  - _الخارجي (Takeaway)_: تتبع وتحديث حالة طلبات الاستلام وإمكانية إلغائها.
-- **الدفع السريع (Express Checkout)**: فتح قوائم العملاء وتقديم طلبات سريعة مباشرة من مكتب الاستقبال.
-- **الإلغاء غير المدمر للبيانات**: إلغاء طلب سفري يقوم بتحديث حالته ديناميكيًا إلى "ملغي" (Canceled) بدلاً من حذفه نهائيًا من النظام، للحفاظ على السجلات المالية والإحصائية.
-
-### 👑 لوحة تحكم الإدارة (لوحة تحكم المسؤول - Admin Dashboard)
-
-- **إدارة قائمة الطعام**: واجهة تفاعلية بالكامل لعرض وإضافة وتعديل وحذف أصناف الطعام، الفئات، والبلدان/المطابخ. يدعم رفع ملفات الصور الفعلية مباشرة وحفظها على الخادم وعرضها ديناميكيًا عبر التطبيق.
-- **التحكم في حسابات المستخدمين والموظفين**: استرجاع قائمة بجميع حسابات المسؤولين، الكاشيرية، والعملاء المسجلين، وإنشاء حسابات جديدة للمديرين أو الكاشيرية، أو حذف أي حساب.
-- **تحليلات المبيعات والتقارير**: لوحة تقارير مخصصة مع فلاتر لتحديد نطاقات التواريخ لحساب إجمالي الإيرادات وعدد المعاملات الناجحة من الطلبات المدفوعة/المكتملة.
-- **إدارة الكوبونات والعروض**: إدارة أكواد الخصم الثابتة أو بالنسبة المئوية.
+- **Framework**: Angular 22
+- **Scripting Language**: TypeScript
+- **State & Data Handling**: RxJS Observables
+- **Styling**: Sass / SCSS, HTML5, Vanilla CSS
 
 ---
 
-## 📂 هيكل المجلدات (Folder Structure)
+## ✨ Key Features
+
+### 👤 Customer Experience
+
+- **Online Ordering**: Place Takeaway or Delivery orders with custom notes and totals.
+- **Menu Browsing**: Filter meals by Category or Country/Cuisine of origin, with real-time text search.
+- **Order History & Tracking**: Check past transactions, real-time statuses, and unique sequential order tracking IDs.
+- **Takeaway Cancellations**: Direct order cancellation ("إلغاء الطلب") option from the customer profile page.
+- **Account Control**: Login, Sign-Up, and OTP verification (email-based) for account activation or password resets.
+
+### 💼 Staff Experience (Cashier Dashboard)
+
+- **Orders Workflow Management**: View and update live orders categorized by Dine-In, Takeaway, and Delivery.
+  - _Delivery_: Advance status from _Pending_ ➡️ _With Driver_ ➡️ _Completed_, or cancel the order.
+  - _Dine-In_: Live table tracking and status transitions (_Pending_ ➡️ _Cooking_ ➡️ _Served_ ➡️ _Completed_).
+  - _Takeaway_: Track, update status, and cancel pickup orders.
+- **Express Checkout**: Open customer menus and place rapid orders from the desk.
+- **Non-Destructive Cancellations**: Cancelling a takeaway order updates its status to "Canceled" dynamically rather than deleting it from the system, preserving records.
+
+### 👑 Administrator Panel (Admin Dashboard)
+
+- **Menu Management**: Fully interactive interface to view, add, edit, and delete food items, categories, and countries/cuisines. Supports uploading actual image files directly which are saved on the server and displayed dynamically across the app.
+- **User & Staff Account Control**: Retrieve list of all registered Admins, Cashiers, and Customers, create new Manager/Cashier accounts, or delete any account.
+- **Sales Analytics & Reports**: Specialized reports dashboard with date-range filters calculating total revenue and successful transaction counts from paid/completed orders.
+- **Coupon & Offers Manager**: Administer flat or percentage discount coupon codes.
+
+---
+
+## 📂 Folder Structure
 
 ```text
 Matamak/
-├── Core/                       # طبقة العقود والنطاق البرمجي (Domain & Contracts)
-│   ├── DTO/                    # كائنات نقل البيانات (Data Transfer Objects)
-│   ├── IReprosatory/           # واجهات المستودعات (Repository Interfaces)
-│   ├── IServices/              # واجهات الخدمات (Service Interfaces)
-│   ├── Models/                 # نماذج جداول قاعدة البيانات (Database Entity Models)
-│   └── ModelView/              # تمثيلات عرض النماذج (View Model representations)
-├── Infrastructure/             # طبقة تفاصيل التنفيذ الأساسية (Core Implementation Detail)
-│   ├── Context/                # سياق بيانات الـ EF (إعدادات SQL Server)
-│   ├── Migrations/             # سكربتات ترحيل قاعدة البيانات (EF Code-First Migrations)
-│   ├── Reprosatory/            # تطبيقات المستودعات (Repository Implementations)
-│   └── Services/               # التكامل مع الأطراف الخارجية (Paymob, Email, SignalR)
-├── Resturant/                  # مشروع الـ Web API (نقطة الدخول للنظام)
-│   ├── Controllers/            # نقاط نهاية الواجهة البرمجية (API Endpoints)
-│   ├── Properties/             # إعدادات التشغيل وتكوينات IIS
-│   ├── Program.cs              # حقن الاعتماديات وخط أنابيب البرمجيات الوسيطة (DI & Middleware)
-│   └── appsettings.json        # سلاسل الاتصال بقاعدة البيانات ومفاتيح الـ API
-└── Matamak.Frontend/           # تطبيق العميل المبني بـ Angular
+├── Core/                       # Application Contracts & Domain Layer
+│   ├── DTO/                    # Data Transfer Objects
+│   ├── IReprosatory/           # Repository Interfaces
+│   ├── IServices/              # Service Interfaces
+│   ├── Models/                 # Database Entity Models
+│   └── ModelView/              # View Model representations
+├── Infrastructure/             # Core Implementation Detail Layer
+│   ├── Context/                # EF DataContext (SQL Server Configuration)
+│   ├── Migrations/             # EF Code-First Migration Scripts
+│   ├── Reprosatory/            # Repository Implementations
+│   └── Services/               # Third-party integrations (Paymob, Email, SignalR)
+├── Resturant/                  # Web API Project (Entry Point)
+│   ├── Controllers/            # API Endpoints
+│   ├── Properties/             # Launch settings & IIS configurations
+│   ├── Program.cs              # Dependency Injection & Middleware Pipeline
+│   └── appsettings.json        # Database Connection Strings & API Keys
+└── Matamak.Frontend/           # Angular Client Application
     ├── src/
     │   ├── app/
-    │   │   ├── core/           # المصادقة، الخدمات، الحراس، والاعتراضات العامة (Guards & Interceptors)
-    │   │   ├── features/       # وحدات الميزات المخصصة (المصادقة، العملاء، لوحة تحكم الموظفين)
-    │   │   └── shared/         # التخطيطات المشتركة، مكونات واجهة المستخدم، والأنابيب (Pipes)
-    │   └── environments/       # إعدادات البيئات المختلفة (التطوير والإنتاج)
-    └── proxy.conf.json         # إعدادات الوكيل العكسي للـ API أثناء عملية التطوير
+    │   │   ├── core/           # Auth, Services, Guards, and Global Interceptors
+    │   │   ├── features/       # Feature modules (Auth, Customer, Staff Dashboard)
+    │   │   └── shared/         # Reusable layouts, UI Components, and Pipes
+    │   └── environments/       # Environment configurations (Dev & Production)
+    └── proxy.conf.json         # API reverse proxy configuration for development
 ```
 
 ---
 
-## 🚀 خطوات تشغيل المشروع
+## 🚀 Steps to Run the Project
 
-### المتطلبات الأساسية
+### Prerequisites
 
-- **نظام تشغيل Windows 10/11**
-- **حزمة تطوير البرمجيات .NET 10 SDK**
-- **بيئة تشغيل Node.js** (نسخة الدعم طويل الأمد LTS)
-- **خادم قاعدة بيانات SQL Server** (نسخة LocalDB أو النسخة الافتراضية)
+- **Windows 10/11**
+- **.NET 10 SDK**
+- **Node.js** (LTS version)
+- **SQL Server** (LocalDB or default instance)
 
-### 1. إعداد وتغذية قاعدة البيانات (Database Setup & Seeding)
+### 1. Database Setup & Seeding
 
-تأكد من تشغيل خادم SQL Server محليًا. لتطبيق ترحيلات قاعدة البيانات وتغذيتها بالبيانات الافتراضية:
+Ensure SQL Server is running locally. To apply database migrations and seed default data:
 
-1. افتح نافذة الأوامر (Terminal) في المجلد الرئيسي للمشروع.
-2. قم بتشغيل أمر تحديث قاعدة البيانات التالي:
+1. Open a terminal at the root of the project.
+2. Run the database update command:
    ```bash
    dotnet ef database update --project Infrastructure --startup-project Resturant
    ```
-3. عند التشغيل الأول، تقوم الواجهة الخلفية تلقائيًا بتغذية قاعدة البيانات بالآتي:
-   - **المستخدمون الإداريون**:
-     - **المسؤول (Admin)**: البريد الإلكتروني: `admin@gmail.com` / كلمة المرور: `123456789`
-     - **الكاشير (Cashier)**: البريد الإلكتروني: `cashier@gmail.com` / كلمة المرور: `147258369`
-   - **قائمة الأطعمة**: إضافة ثلاث فئات رئيسية افتراضية (_وجبات، حلويات، مشروبات_) وإدراج 3 أطباق افتراضية تحت كل فئة (كاملة مع الأوصاف، الأسعار، والصور).
+3. On startup, the backend automatically seeds:
+   - **Administrative Users**:
+     - **Admin**: `admin@gmail.com` / `123456789`
+     - **Cashier**: `cashier@gmail.com` / `147258369`
+   - **Menu Database**: Seeding three default categories (_وجبات, حلويات, مشروبات_) and inserting 3 default dishes under each category (complete with descriptions, pricing, and images).
 
-### 2. تشغيل الواجهة الخلفية (Backend API)
+### 2. Run the Backend API
 
-يمكنك تشغيل الواجهة الخلفية من خلال برنامج Visual Studio أو من خلال سطر الأوامر (CLI).
+You can run the backend from Visual Studio Community or the CLI.
 
-- **عن طريق Visual Studio (موصى به)**:
-  - افتح ملف الحل `Matamak.sln` في Visual Studio 2022.
-  - حدد مشروع **Resturant** كـ مشروع بدء التشغيل (Startup Project).
-  - قم بالتشغيل باستخدام **IIS Express** (يستضيف الواجهة البرمجية على الرابط `https://localhost:44357` وهو ما يطابق إعدادات الوكيل العكسي للواجهة الأمامية).
-- **عن طريق سطر الأوامر (CLI)**:
-  - نفذ الأمر التالي:
+- **Via Visual Studio (Recommended)**:
+  - Open `Matamak.sln` in Visual Studio 2022.
+  - Set **Resturant** as the startup project.
+  - Run using **IIS Express** (hosts the API on `https://localhost:44357` which matches the frontend proxy settings).
+- **Via CLI**:
+  - Run the command:
     ```bash
     dotnet run --project Resturant
     ```
-  - ملاحظة: قم بتحديث المنفذ المستهدف (Port) في ملف `Matamak.Frontend/proxy.conf.json` ليطابق منفذ الـ CLI النشط (`5270` أو `7092`).
+  - Note: Update the target port in `Matamak.Frontend/proxy.conf.json` to match the active CLI port (`5270` or `7092`).
 
-### 3. تشغيل الواجهة الأمامية (Angular)
+### 3. Run the Frontend (Angular)
 
-1. افتح نافذة الأوامر في مجلد `Matamak.Frontend/`.
-2. قم بتثبيت الاعتماديات الخاصة بـ npm (إذا لم تقم بذلك مسبقًا):
+1. Open a terminal in `Matamak.Frontend/`.
+2. Install npm dependencies (if not done already):
    ```bash
    npm install
    ```
-3. قم بتشغيل خادم التطوير المحلي لـ Angular:
+3. Start the Angular local dev server:
    ```bash
    npm start
    ```
-4. افتح المتصفح وانتقل إلى الرابط التالي: `http://localhost:4200`.
+4. Open your browser and go to `http://localhost:4200`.
 
 ---
 
-## 🖼️ لقطات شاشة من المشروع (Screenshots)
+## 🖼️ Project Screenshots
 
-_إليك نظرة بصرية على الميزات المختلفة لنظام "مطعمك":_
+_Here are some visual insights into the Matamak system:_
 
-### 👤 تجربة العميل (Customer Experience)
+### 👤 Customer Experience
 
-#### صفحة قائمة الطعام للعميل
+#### Customer Menu Page
 
-![صفحة قائمة الطعام للعميل](Matamak/screenshots/customer_menu.png)
+![Customer Menu Page](Matamak/screenshots/customer_menu.png)
 
-### 💼 واجهة الموظفين والكاشير
+### 💼 Staff & Cashier Interface
 
-#### لوحة تحكم الكاشير
+#### Cashier Dashboard
 
-![لوحة تحكم الكاشير](Matamak/screenshots/cashier_dashboard.png)
+![Cashier Dashboard](Matamak/screenshots/cashier_dashboard.png)
 
-#### شاشة تسجيل الطلبات للكاشير
+#### Cashier Order Placement Screen
 
-![شاشة تسجيل الطلبات للكاشير](Matamak/screenshots/cashier_order.png)
+![Cashier Order Placement Screen](Matamak/screenshots/cashier_order.png)
 
-### 👑 لوحة تحكم المسؤول (Administrator Panel)
+### 👑 Administrator Panel
 
-#### نظرة عامة على لوحة تحكم المسؤول
+#### Admin Dashboard Overview
 
-![نظرة عامة على لوحة تحكم المسؤول](Matamak/screenshots/admin_dashboard.png)
+![Admin Dashboard Overview](Matamak/screenshots/admin_dashboard.png)
 
-#### إدارة قائمة الطعام
+#### Menu Management
 
-![إدارة قائمة الطعام](Matamak/screenshots/menu_management.png)
-
----
-
-## ⚠️ التحديات التي تم مواجهتها وحلولها
-
-- **انهيار الواجهة البرمجية عند خلو الجداول**: حل مشكلة استثناءات الواجهة الخلفية غير المعالجة عند طلب عناصر القائمة وقاعدة البيانات فارغة. تم إصلاح ذلك عن طريق استبدال إلقاء الاستثناءات بإرجاع قائمة فارغة في طبقات المستودع والخدمة.
-- **هيكل لوحة تحكم المسؤول التجريبية**: ربط واجهات لوحة التحكم بالمنافذ والمسارات النشطة. تم حل المشكلة عن طريق كتابة منطق العمليات الأساسية (CRUD) للأصناف/الفئات/البلدان في `CatalogService` والاستعلام عن قائمة حسابات المستخدمين في `AuthService` وتحديثات حالات الطلبات والمخزون وجلب التقارير في `OrderService`.
-- **تغييرات النماذج المعلقة في EF Core**: إدارة تضاربات الترحيل لـ Entity Framework عند إضافة حقول جديدة دون ترحيل. تم الحل عن طريق إضافة ترحيل موحد باسم `UpdatePendingModelChanges`.
-- **قيود CORS**: حل مشكلة طلبات مشاركة الموارد عبر الأصول المختلفة بين تطبيق Angular المحلي (`localhost:4200`) وخادم API لـ ASP.NET Core. تم الحل من خلال إعداد برمجيات وسيطة (Middleware) تسمح بـ CORS في ملف `Program.cs`.
-- **تصادمات نقاط Swagger**: تمت مواجهة أخطاء في التوجيه ومخطط Swashbuckle (HTTP 500) بسبب تكرار سمات أفعال HTTP على إجراءات التحكم الفردية. تم الحل عن طريق فصل الإجراءات وتطبيق تعيينات مسار فريدة.
-- **رفع وعرض صور قائمة الطعام الديناميكية**: إصلاح مشكلة تجاهل تطبيق Angular لصور العناصر المرفوعة ديناميكيًا واستبدالها بصور عشوائية من موقع Unsplash. تم إنشاء نقطة نهاية مخصصة لرفع الصور بصيغة multipart-form على الواجهة الخلفية وحفظها في مجلد `wwwroot/uploads` وضبط مكونات وقوالب الواجهة الأمامية لتحليل وعرض هذا المسار المباشر (`imageUrl`).
-- **الإلغاء غير المدمر للطلب الخارجي**: في البداية، كان إلغاء الطلبات الخارجية يؤدي لحذف سجلاتها من قاعدة البيانات وواجهة المستخدم. تم إعادة هيكلة سير العمل لتنفيذ تغيير حالة خفيف إلى ملغي (`Canceled`) وتعديل قواعد الصلاحيات على نقطة النهاية بحيث يمكن للمستخدم العادي (`Customer`) فقط طلب الإلغاء، بينما يمتلك المسؤول (`Admin`) والكاشير (`Cashier`) الصلاحية لتغيير الطلبات لأي حالة.
-- **حسابات مبيعات وأرباح صفرية في التحليلات**: حل مشكلة خلو نتائج التحليلات والتقارير بسبب عدم ملء جدول سجلات الدفع في قاعدة البيانات. تم إعادة هيكلة منطق حساب تقارير المبيعات في لوحة التحكم للاستعلام عن إجمالي الإيرادات وإجمالي الأعداد مباشرة من جميع الطلبات الناجحة والمكتملة (`Paid`, `Completed`, `Delivered`).
-- **إعادة تعيين معرفات الطلبات**: إصلاح مشكلة إعادة تعيين تسلسل تتبع الطلبات إلى رقم `#1` عند بدء جلسة جديدة أو يوم جديد، وذلك عبر استبدال عدادات واجهة المستخدم المؤقتة بالمفاتيح الأساسية التلقائية والفريدة المنتجة من قاعدة البيانات (`id`).
+![Menu Management](Matamak/screenshots/menu_management.png)
 
 ---
 
-## 🔮 التحسينات المستقبلية
+## ⚠️ Challenges Faced & Resolutions
 
-- **محلل تقارير متقدم**: دمج مكتبات مثل Chart.js أو D3.js في الواجهة الأمامية لتصور إحصاءات المبيعات بيانياً.
-- **الحوسبة الحاوية (Dockerization)**: إنشاء ملفات Docker للواجهة الخلفية، الأمامية، وخادم SQL Server للسماح بنشر المشروع بأمر واحد.
-- **خطوط أنابيب التطوير والدمج المستمر (CI/CD Pipeline)**: بناء مسارات عمل إجراءات GitHub (GitHub Actions) للاختبار الآلي وفحص جودة الكود (Linting).
-- **إعادة هيكلة مخططات قاعدة البيانات**: مراجعة وتعديل بعض المسميات البسيطة في قاعدة البيانات (مثل تصحيح كتابة مسميات `Delivary` و `Oredr` و `Reprosatory`).
-
----
-
-## 👥 أعضاء الفريق
-
-- **مصطفى محمود أمين** - _قائد المشروع (Project Lead)_
-- **زياد أيمن عبد السلام**
-- **أحمد محمد عبد الله**
-- **إبراهيم مدحت عباس**
-- **بلال محمد عبده**
+- **API Crash on Empty Tables**: Resolving backend unhandled exceptions when requesting menu items from an empty database. Fixed by replacing exception throwing with empty list returns in the repository and service layers.
+- **Admin dashboard mockup shell**: Connecting the frontend shell dashboard to active endpoints. Resolved by writing CRUD logic for items/categories/countries in `CatalogService`, user account list queries in `AuthService`, and order state transitions, inventory updates, and reports fetching in `OrderService`.
+- **EF Core Pending Model Changes**: Managing Entity Framework migration discrepancies when new fields were added without migrations. Resolved by adding a unified `UpdatePendingModelChanges` migration.
+- **CORS Restrictions**: Resolving cross-origin requests between the local Angular application (`localhost:4200`) and the ASP.NET Core API server. Resolved by configuring permissive CORS middleware in `Program.cs`.
+- **Swagger Endpoint Collisions**: Encountered ASP.NET Core HTTP 500 routing/Swashbuckle schema errors due to duplicate HTTP verb attributes on single controller actions. Resolved by segregating actions and applying unique route mappings.
+- **Dynamic Menu Image Uploading & Rendering**: Fixed an issue where the Angular frontend ignored dynamically uploaded item images and defaulted to random Unsplash placeholders. Created a direct multipart-form image upload endpoint on the backend saving to `wwwroot/uploads`, and adjusted the frontend templates/components to dynamically parse and display this direct path (`imageUrl`).
+- **Non-Destructive Takeaway Cancellations**: Initially, takeaway order cancellations deleted order records from the UI and database. Refactored the workflow to execute a soft state change (`Canceled`), and adjusted authorization rules on the endpoint so that standard `Customer` users can only request a cancellation, while `Admin` and `Cashier` roles can update orders to any state.
+- **Zero Sales/Profit Analytics Calculations**: Resolving empty analytics results due to the database payment records table being unpopulated. Refactored the dashboard sales reports calculation logic to query total revenue and total counts directly from all successful orders (`Paid`, `Completed`, `Delivered`).
+- **Resetting Order Identifiers**: Fixed order tracking sequences resetting to `#1` on fresh sessions or daily rolls by replacing temporary UI sequence counters with database-generated auto-incremented primary keys (`id`).
 
 ---
 
-## 🎥 الفيديو التوضيحي
+## 🔮 Future Improvements
 
-اضغط على الرابط أدناه لمشاهدة فيديو يشرح ميزات المشروع وهيكل الكود:
+- **Advanced Reports Visualizer**: Integrate Chart.js or D3.js in the frontend to visualize sales statistics.
+- **Dockerization**: Create Docker files for backend, frontend, and SQL Server to allow single-command deployment.
+- **CI/CD Pipeline**: Build GitHub Actions workflows for automated code testing and linting.
+- **Refactoring Database Schemas**: Clean up minor database schema naming conventions (e.g., correcting spelling of `Delivary`, `Oredr`, and `Reprosatory`).
 
-🔗 **[مشاهدة الفيديو التوضيحي للمشروع](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** _(استبدله بالرابط الفعلي للفيديو الخاص بك)_
+---
+
+## 👥 Team Members
+
+- **Mostafa Mahmoud Amin** - _Project Lead_
+- **Zyad Ayman Abdel-Salam**
+- **Ahmed Mohamed Abdullah**
+- **Ibrahim Medhat Abbas**
+- **Belal Muhammad Abdo**
+
+---
+
+## 🎥 Explanatory Video
+
+Click the link below to watch a video walk-through and explanation of the project features and code structure:
+
+🔗 **[Watch Project Explanatory Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** _(Replace with your actual video link)_
