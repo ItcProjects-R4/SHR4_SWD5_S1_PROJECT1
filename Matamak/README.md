@@ -1,4 +1,4 @@
-# Matamak - Restaurant Ordering & Management System
+# 🍽️ Matamak - Restaurant Ordering & Management System
 
 Matamak is a comprehensive, modern restaurant ordering and management system designed to digitalize daily food operations. It connects customers, cashiers, and system administrators through a seamless real-time workflow, linking a fully interactive Angular frontend with a robust C# .NET 10 Web API backend.
 
