@@ -82,12 +82,15 @@ namespace Infrastructure.Reprosatory
         {
             var start = from ?? DateTime.UtcNow.Date.AddDays(-30);
             var end = to ?? DateTime.UtcNow;
-            var payments = dataContext.PaymentRecords.Where(p => p.CreatedAt >= start && p.CreatedAt <= end).ToList();
 
-            var totalOrders = dataContext.Orders.Count(o => o.OrderDate >= start && o.OrderDate <= end);
-            var paidOrders = payments.Count(p => p.Status == "Paid");
-            var netRevenue = payments.Where(p => p.Status == "Paid").Sum(p => p.Amount);
-            var grossRevenue = dataContext.Orders.Where(o => o.OrderDate >= start && o.OrderDate <= end).Sum(o => o.TotalPrice);
+            var orders = dataContext.Orders.Where(o => o.OrderDate >= start && o.OrderDate <= end).ToList();
+            var totalOrders = orders.Count;
+
+            var successfulOrders = orders.Where(o => o.Status == "Paid" || o.Status == "Completed" || o.Status == "Delivered").ToList();
+            var paidOrders = successfulOrders.Count;
+            
+            var netRevenue = successfulOrders.Sum(o => o.TotalPrice);
+            var grossRevenue = orders.Sum(o => o.TotalPrice);
 
             return new SalesReportMV
             {
@@ -97,7 +100,9 @@ namespace Infrastructure.Reprosatory
                 PaidOrders = paidOrders,
                 GrossRevenue = grossRevenue,
                 NetRevenue = netRevenue,
-                TotalDiscounts = grossRevenue - netRevenue
+                TotalDiscounts = grossRevenue - netRevenue,
+                TotalRevenue = netRevenue,
+                TotalOrdersCount = paidOrders
             };
         }
 

@@ -13,6 +13,9 @@ namespace Core.ModelView
         public string FullName { get; set; }= string.Empty;
         public string Role { get; set; }= string.Empty;
         public List<DeliveryOrderMV> deliveryOrders { get; set; } = new List<DeliveryOrderMV>();
+        public List<TakeAwayOrderMV> takeawayOrders { get; set; } = new List<TakeAwayOrderMV>();
 
     }
 }
+
+

@@ -2,13 +2,18 @@ using Core.DTO;
 using Core.IReprosatory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Resturant.Controllers
 {
     [Route("api/[controller]")]
     [Route("api/v1/items")]
+    [Route("api/items")]
     [ApiController]
     public class ItemController : ControllerBase
     {
@@ -19,8 +24,9 @@ namespace Resturant.Controllers
             this.itemRepo = itemRepo;
         }
 
-        [HttpGet("getAllItem")]
         [HttpGet]
+        [Route("getAllItem")]
+        [Route("")]
         public IActionResult GetAllItem()
         {
             var items = itemRepo.GetAllItems();
@@ -32,8 +38,9 @@ namespace Resturant.Controllers
             return Ok(items);
         }
 
-        [HttpGet("getItemById/{id}")]
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getItemById/{id}")]
+        [Route("{id}")]
         public IActionResult GetItem([FromRoute] int id)
         {
             var item = itemRepo.GetItemById(id);
@@ -104,8 +111,9 @@ namespace Resturant.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("removeItem/{id}")]
-        [HttpDelete("removeItem")]
+        [HttpDelete]
+        [Route("removeItem/{id}")]
+        [Route("removeItem")]
         public IActionResult RemoveItem([FromRoute] int id)
         {
             var existingItem = itemRepo.GetItemById(id);
@@ -117,5 +125,39 @@ namespace Resturant.Controllers
             itemRepo.RemoveItem(id);
             return Ok("Item removed successfully.");
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("uploadImage")]
+        public async Task<IActionResult> UploadImage([FromForm] ImageUploadD model, [FromServices] IWebHostEnvironment env)
+        {
+            if (model == null || model.File == null || model.File.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var file = model.File;
+            var webRootPath = env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot");
+            var uploadsFolderPath = Path.Combine(webRootPath, "uploads");
+            if (!Directory.Exists(uploadsFolderPath))
+            {
+                Directory.CreateDirectory(uploadsFolderPath);
+            }
+
+            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            var fileUrl = $"/uploads/{uniqueFileName}";
+            return Ok(new { url = fileUrl });
+        }
+    }
+
+    public class ImageUploadD
+    {
+        public IFormFile File { get; set; } = null!;
     }
 }

@@ -19,15 +19,17 @@ namespace Resturant.Controllers
 
         [Authorize(Roles = "Admin,Cashier")]
         [HttpGet]
-        [HttpGet("getAllTakeAwayOrders")]
+        [Route("")]
+        [Route("getAllTakeAwayOrders")]
         public IActionResult GetAll()
         {
             return Ok(takeAwayOrderRepo.GetAllTakeAwayOrders());
         }
 
         [Authorize(Roles = "Admin,Cashier,Customer")]
-        [HttpGet("{id}")]
-        [HttpGet("getTakeAwayOrder/{id}")]
+        [HttpGet]
+        [Route("{id}")]
+        [Route("getTakeAwayOrder/{id}")]
         public IActionResult Get(int id)
         {
             return Ok(takeAwayOrderRepo.GetTakeAwayOrder(id));
@@ -35,34 +37,58 @@ namespace Resturant.Controllers
 
         [Authorize(Roles = "Customer,Cashier")]
         [HttpPost]
-        [HttpPost("addTakeAwayOrder")]
-        public IActionResult Add([FromBody] TakeAwayD order)
+        [Route("")]
+        [Route("addTakeAwayOrder")]
+        public async Task<IActionResult> Add([FromBody] TakeAwayD order)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            takeAwayOrderRepo.AddTakeAwayOrder(order);
+            await takeAwayOrderRepo.AddTakeAwayOrder(order);
             return Ok("Takeaway order created successfully.");
         }
 
         [Authorize(Roles = "Customer,Cashier")]
-        [HttpPut("{id}")]
-        [HttpPut("updateTakeAwayOrder/{id}")]
+        [HttpPut]
+        [Route("{id}")]
+        [Route("updateTakeAwayOrder/{id}")]
         public IActionResult Update(int id, [FromBody] TakeAwayD order)
         {
             takeAwayOrderRepo.UpdateTakeAwayOrder(order, id);
             return Ok("Takeaway order updated successfully.");
         }
 
-        [Authorize(Roles = "Admin,Cashier")]
-        [HttpDelete("{id}")]
-        [HttpDelete("removeTakeAwayOrder/{id}")]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = "Admin,Cashier,Customer")]
+        [HttpPut("changeTakeawayOrderStatus/{id}")]
+        public async Task<IActionResult> ChangeTakeawayOrderStatus([FromRoute] int id, [FromQuery] string status)
         {
-            takeAwayOrderRepo.RemoveTakeAwayOrder(id);
+            if (User.IsInRole("Customer") && !status.Equals("Canceled", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Customers are only allowed to cancel their orders.");
+            }
+
+            try
+            {
+                await takeAwayOrderRepo.ChangeTakeawayOrderStatus(id, status);
+                return Ok("Takeaway order status updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin,Cashier")]
+        [HttpDelete]
+        [Route("{id}")]
+        [Route("removeTakeAwayOrder/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await takeAwayOrderRepo.RemoveTakeAwayOrder(id);
             return Ok("Takeaway order removed successfully.");
         }
     }
 }
+

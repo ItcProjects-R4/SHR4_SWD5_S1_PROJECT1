@@ -1,4 +1,4 @@
-﻿using Core.DTO;
+using Core.DTO;
 using Core.IReprosatory;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
@@ -63,8 +63,9 @@ namespace Resturant.Controllers
             }
         }
 
-        [HttpGet("getCountryById")]
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getCountryById")]
+        [Route("{id}")]
             public IActionResult GetCountryById(int id)
             {
                 try
@@ -79,8 +80,9 @@ namespace Resturant.Controllers
             }
 
 
-            [HttpGet("getAllCountries")]
             [HttpGet]
+            [Route("getAllCountries")]
+            [Route("")]
             public IActionResult GetAllCountries()
             {
                 var countries = countryRepo.GetAllCountries();
