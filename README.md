@@ -213,11 +213,11 @@ _Here are some visual insights into the Matamak system:_
 
 ## 👥 Team Members
 
-- **Mostafa Mahmoud Amin** - _Project Lead_
-- **Zyad Ayman Abdel-Salam**
-- **Ahmed Mohamed Abdullah**
-- **Ibrahim Medhat Abbas**
-- **Belal Muhammad Abdo**
+- **Mostafa Mahmoud Amin** - _Project Lead & Full Stack Developer_
+- **Zyad Ayman Abdel-Salam** - _Full Stack Developer_
+- **Ahmed Mohamed Abdullah** - _System Analyst_
+- **Ibrahim Medhat Abbas** - _Presentation & Decomentation Specialist_
+- **Belal Muhammad Abdo** - _Frontend Developer_
 
 ---
 
@@ -225,4 +225,4 @@ _Here are some visual insights into the Matamak system:_
 
 Click the link below to watch a video walk-through and explanation of the project features and code structure:
 
-🔗 **[Watch Project Explanatory Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** _(Replace with your actual video link)_
+🔗 **[Watch Project Explanatory Video](https://drive.google.com/file/d/1vzcUd504_-6dpp0o9l5K4lWh8LzshTWL/view?usp=drive_link)**
